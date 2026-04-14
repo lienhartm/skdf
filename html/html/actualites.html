@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Ski Club Guebwiller : Refuge Grand-Ballon Roedelen Club Ski de Fond de Guebwiller">
+
+    <title>SCG : Refuge Grand-Ballon Roedelen club ski de fond de Guebwiller</title>
+    <link rel="shortcut icon" type="image/x-icon" href="../media/favicon.ico">
+    <link rel="stylesheet" href="../styles/styles.css">
+    <script src="../scripts/scripts.js"></script>
+    <script src="../scripts/header.js" defer></script>
+    <script src="../scripts/nav.js" defer></script>
+    <script src="../scripts/footer.js" defer></script>
+    <script src="../scripts/h6.js" defer></script>
+
+    <style>
+        h1 {
+            text-shadow: none;
+            color: black;
+        }
+
+        .actualite {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 50px;
+        }
+
+        .article-header {
+            display: inline;
+            margin-bottom: 20px;
+        }
+
+        .article-content {
+            width: auto;
+            height: auto;
+        }
+
+        span {
+            font-size: 12px;
+            font-weight: 100;
+        }
+
+        .row {
+            display: flex;
+            justify-content: center;
+        }
+
+        .column {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            max-width: 900px;
+            justify-content: center;
+        }
+
+        .column img {
+            width: 200px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body oncopy="return false" oncut="return false" onpaste="return false" oncontextmenu="return false"
+    onselectstart="return false" ondragstart="return false">
+
+    <nav class="telescript">
+        <!-- TELESCRIPT -->
+    </nav>
+
+    <header id="header"></header>
+
+    <nav class="nav" id="nav"></nav>
+
+    <main style="background-color: #f5f5f5;">
+
+        <h2>Actualités</h2>
+
+        <div id="actualites">
+
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+        <script>
+            fetch('../media/articles/actus.json')
+                .then(response => response.json())
+                .then(data => {
+                    const actualitesContainer = document.getElementById('actualites');
+                    // Tri du plus récent au plus ancien
+                    data.sort((a, b) => {
+                        const [dayA, monthA, yearA] = a.date.split('/');
+                        const [dayB, monthB, yearB] = b.date.split('/');
+                        const dateA = new Date(yearA, monthA - 1, dayA);
+                        const dateB = new Date(yearB, monthB - 1, dayB);
+                        return dateB - dateA; // Décroissant
+                    });
+
+                    data.forEach(actu => {
+                        const actuDiv = document.createElement('div');
+                        actuDiv.classList.add('actualite');
+
+                        let imageHtml = '';
+
+                        if (actu.images) {
+                            imageHtml = `
+                                <div class="row">
+                                    <div class="column">
+                                        ${actu.images.map(img => `
+                                            <img src="../media/articles/${img}" alt="${actu.titre}" width="200" height="auto">
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            `;
+                        }
+
+                        let firstImageHtml = '';
+                        if (actu.images && actu.images.length > 0) {
+                            firstImageHtml = `<img src="../media/articles/${actu.images[0]}" alt="${actu.titre}" width="300" height="auto" style="float:left;margin-right:50px;">`;
+                        }
+
+                        actuDiv.innerHTML = `
+                            <div class="article-header">
+                                <h3>
+                                    ${actu.titre}
+                                    <span><em>Publié le ${actu.date}</em></span>
+                                    <span><em>Auteur : ${actu.auteur}</em></span>
+                                </h3>
+                            </div>
+                            <div class="article-content">
+                                ${firstImageHtml}
+                                ${marked.parse(actu.article)}
+                            </div>
+                            <div class="photos">
+                                ${imageHtml}
+                            </div>
+                            <br>
+                            <hr>
+                            <br>
+                        `;
+                        actualitesContainer.appendChild(actuDiv);
+                    });
+                })
+                .catch(error => console.error("Erreur lors du chargement des actualités:", error));
+        </script>
+
+    </main>
+
+    <footer id="footer"></footer>
+
+    <h6 id="h6"></h6>
+
+
+</body>
+
+</html>

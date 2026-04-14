@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" version="1.1" creator="EditGPX">
+  <trk>
+    <trkseg>
+      <trkpt lat="47.904813" lon="7.103349">
+        <ele>1333.7</ele>
+      </trkpt>
+      <trkpt lat="47.904989" lon="7.103646">
+        <ele>1333.4</ele>
+      </trkpt>
+      <trkpt lat="47.905529" lon="7.104116">
+        <ele>1328.7</ele>
+      </trkpt>
+      <trkpt lat="47.905908" lon="7.104075">
+        <ele>1324.7</ele>
+      </trkpt>
+      <trkpt lat="47.906354" lon="7.104470">
+        <ele>1323.4</ele>
+      </trkpt>
+      <trkpt lat="47.906676" lon="7.104482">
+        <ele>1320.9</ele>
+      </trkpt>
+      <trkpt lat="47.906883" lon="7.104125">
+        <ele>1315.4</ele>
+      </trkpt>
+      <trkpt lat="47.907040" lon="7.104038">
+        <ele>1312.6</ele>
+      </trkpt>
+      <trkpt lat="47.907614" lon="7.104433">
+        <ele>1311.5</ele>
+      </trkpt>
+      <trkpt lat="47.908835" lon="7.104888">
+        <ele>1299.2</ele>
+      </trkpt>
+      <trkpt lat="47.910011" lon="7.104780">
+        <ele>1279.1</ele>
+      </trkpt>
+      <trkpt lat="47.911263" lon="7.105191">
+        <ele>1259.8</ele>
+      </trkpt>
+      <trkpt lat="47.911607" lon="7.105527">
+        <ele>1251.8</ele>
+      </trkpt>
+      <trkpt lat="47.911720" lon="7.105770">
+        <ele>1248.9</ele>
+      </trkpt>
+      <trkpt lat="47.911695" lon="7.105257">
+        <ele>1251.6</ele>
+      </trkpt>
+      <trkpt lat="47.911519" lon="7.104575">
+        <ele>1252.6</ele>
+      </trkpt>
+      <trkpt lat="47.911864" lon="7.104425">
+        <ele>1249.1</ele>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>

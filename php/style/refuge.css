@@ -1,0 +1,92 @@
+    h2 {
+        text-align: center;
+    }
+
+    div.refuge {
+        margin: 50px;
+        padding-bottom: 50px;
+    }
+
+    table {
+        margin: 50px;
+        border: 1px solid black;
+        border-collapse: collapse;
+        width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    th {
+        background-color: rgba(220, 220, 220, 0.75);
+    }
+
+    th,
+    td {
+        border: 1px solid black;
+        padding: 10px;
+        text-align: center;
+    }
+
+    tr:nth-child(odd) {
+        background-color: rgba(255, 255, 255, 0.75);
+    }
+
+    table caption {
+        font-style: italic;
+        caption-side: bottom;
+    }
+
+    div.photos {
+        display: grid;
+        grid-template-columns: auto auto auto;
+        gap: 5px;
+        margin: 50px;
+    }
+
+    div.photos>img {
+        background: #faf7f0;
+        padding: 8px;
+        border: 1px solid #ddd;
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.25);
+    }
+
+    div.photos>img:nth-child(1) {
+        rotate: -10deg;
+    }
+
+    div.photos>img:nth-child(2) {
+        translate: 0px -30px;
+    }
+
+    div.photos>img:nth-child(3) {
+        rotate: 10deg;
+    }
+
+    div.photos>img:nth-child(4) {
+        rotate: 10deg;
+    }
+
+    div.photos>img:nth-child(5) {
+        translate: 0px 30px;
+    }
+
+    div.photos>img:nth-child(6) {
+        rotate: -10deg;
+    }
+
+    h4 {
+        text-align: center;
+        position: relative;
+        top: 335px;
+    }
+
+    .cuisine {
+        display: grid;
+        grid-template-columns: repeat(2, max-content);
+        justify-content: center;
+        gap: 10px 80px;
+    }
+
+    .reference>li {
+        padding: 5px;
+    }

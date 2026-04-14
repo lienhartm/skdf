@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Ski Club Guebwiller : Refuge Grand-Ballon Roedelen Club Ski de Fond de Guebwiller">
+
+    <title>SCG : Refuge Grand-Ballon Roedelen club ski de fond de Guebwiller</title>
+    <link rel="shortcut icon" type="image/x-icon" href="../media/favicon.ico">
+    <link rel="stylesheet" href="../styles/styles.css">
+    <script src="../scripts/scripts.js"></script>
+    <script src="../scripts/header.js" defer></script>
+    <script src="../scripts/nav.js" defer></script>
+    <script src="../scripts/footer.js" defer></script>
+    <script src="../scripts/h6.js" defer></script>
+
+    <style>
+        div.presse {
+            margin: 50px;
+        }
+
+        div.presse>ul {
+            margin-top: 50px;
+        }
+
+        div.presse>ul>li {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body oncopy="return false" oncut="return false" onpaste="return false" oncontextmenu="return false"
+    onselectstart="return false" ondragstart="return false">
+
+    <nav class="telescript">
+        <!-- TELESCRIPT -->
+    </nav>
+
+    <header id="header"></header>
+
+    <nav class="nav" id="nav"></nav>
+
+    <main style="background-color: #f5f5f5;">
+
+        <!-- PRESSE -->
+        <div class="presse">
+            <h2>Revue de presse :</h2>
+            <ul id="presse">
+
+            </ul>
+        </div>
+
+    </main>
+
+    <script>
+        fetch('../media/presses/presses.json')
+            .then(response => response.json())
+            .then(data => {
+                const actualitesContainer = document.getElementById('presse');
+                const path = '../media/presses/';
+
+                // Tri du plus récent au plus ancien
+                data.sort((a, b) => {
+                    const [dayA, monthA, yearA] = a.date.split('/');
+                    const [dayB, monthB, yearB] = b.date.split('/');
+                    const dateA = new Date(yearA, monthA - 1, dayA);
+                    const dateB = new Date(yearB, monthB - 1, dayB);
+                    return dateB - dateA; // Décroissant
+                });
+
+                data.forEach(press => {
+                    const pressDiv = document.createElement('li');
+                    pressDiv.classList.add('presse');
+
+                    pressDiv.innerHTML = `<a href="${path}${press.document}" target="_blank">${press.titre}</a>`;
+                    actualitesContainer.appendChild(pressDiv);
+                });
+            })
+            .catch(error => console.error("Erreur lors du chargement des articles de presse:", error));
+
+    </script>
+
+    <footer id="footer"></footer>
+
+    <h6 id="h6"></h6>
+
+
+</body>
+
+</html>

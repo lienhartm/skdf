@@ -1,0 +1,46 @@
+.actualite {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 50px;
+}
+
+.article-header {
+    display: inline;
+    margin-bottom: 20px;
+}
+
+.article-content {
+    width: auto;
+    height: auto;
+}
+
+.article-content>img {
+    float: left;
+    margin-right: 50px;
+}
+
+span {
+    font-size: 12px;
+    font-weight: 100;
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+}
+
+.column {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    max-width: 900px;
+    justify-content: center;
+}
+
+.column img {
+    width: 200px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}

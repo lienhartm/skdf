@@ -1,0 +1,12 @@
+div.presse {
+    margin: 50px;
+    padding-bottom: 50px;
+}
+
+div.presse>ul {
+    margin-top: 50px;
+}
+
+div.presse>ul>li {
+    margin-top: 10px;
+}

@@ -1,0 +1,12 @@
+div.resultats {
+    margin: 50px;
+    padding-bottom: 50px;
+}
+
+div.resultats>ul {
+    margin-top: 50px;
+}
+
+div.resultats>ul>li {
+    margin-top: 10px;
+}

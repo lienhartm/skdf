@@ -1,0 +1,59 @@
+figure.histoire {
+    text-align: center;
+}
+
+figure.histoire>img {
+    background: #faf7f0;
+    padding: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.25);
+}
+
+figure.histoire>figcaption {
+    margin-top: 20px;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+div.histoire {
+    margin: 50px;
+}
+
+div.histoire>img {
+    margin: 15px 50px;
+}
+
+img.left {
+    float: left;
+    background: #faf7f0;
+    padding: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.25);
+    transform: rotate(-1deg);
+}
+
+img.right {
+    float: right;
+    background: #faf7f0;
+    padding: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.25);
+    transform: rotate(1deg);
+}
+
+figure.centenaire {
+    margin: 50px;
+    text-align: center;
+}
+
+figure.centenaire>img {
+    background: #faf7f0;
+    padding: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.25);
+}
+
+figure.centenaire>figcaption {
+    font-style: italic;
+    text-align: center;
+}

@@ -1,0 +1,25 @@
+h2 {
+    margin: 50px;
+}
+
+/* SKDF */
+div.skdf {
+    margin: 75px;
+}
+
+div.skdf>img {
+    margin-right: 50px;
+}
+
+img.left {
+    float: left;
+}
+
+img.right {
+    float: right;
+}
+
+.renseignements {
+    text-align: left;
+    margin-left: 20px;
+}

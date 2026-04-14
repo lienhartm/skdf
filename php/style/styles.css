@@ -1,0 +1,140 @@
+html {
+    background-image: url('../media/back.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+nav,
+header,
+main,
+footer,
+h6 {
+    background-color: rgba(255, 255, 255, 0.8);
+    max-width: 1320px;
+    margin: 0 auto;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+hr {
+    width: 20%;
+    margin: 50px auto;
+}
+
+/* TELESCRIPT (Text Carousel) */
+nav.telescript {
+    text-align: center;
+    font-weight: bold;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.5s ease-in-out;
+    background-color: gold;
+    font-size: 1.2rem;
+}
+
+/* HEADER */
+header {
+    background-size: cover;
+    background-position: center;
+    transition: background-image 1s ease-in-out;
+    min-height: 260px;
+    display: flex;
+    flex-direction: column;
+}
+
+div.title {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 30px;
+    margin-left: 150px;
+}
+
+div.title>img {
+    margin: 30px;
+}
+
+h1 {
+    color: white;
+    text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+}
+
+/* NAV */
+nav.nav {
+    text-align: center;
+}
+
+nav.nav>a {
+    padding: 10px;
+    background: white;
+    box-shadow: 1px 1px 1px black, 0 0 2px blue, 0 0 3px darkblue;
+    border-radius: 5px;
+    margin-inline: 1px;
+}
+
+.article a {
+    border-bottom: 1px solid white;
+}
+
+nav.nav>a:hover,
+.article:hover,
+div.archive:hover {
+    border-bottom: 1px solid #0a58ca;
+    border-right: 1px solid #0a58ca;
+    box-shadow: 0 0 10px rgba(49, 210, 242, 0.4);
+    text-decoration: none;
+}
+
+main {
+    padding-top: 50px;
+}
+
+main>p {
+    margin-left: 50px;
+}
+
+/* FOOTER */
+footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+div.footer {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+div.footer>a {
+    margin: 5px;
+}
+
+div.footer>a:hover {
+    text-decoration: underline;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+.telescript a:hover {
+    text-decoration: underline;
+}
+
+address {
+    text-align: center;
+}
+
+h6 {
+    text-align: center;
+}

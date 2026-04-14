@@ -1,0 +1,86 @@
+/* ARTICLE */
+article {
+    margin-top: 20px;
+}
+
+div.articles {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+div.article {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border: 1px solid #e3f2fd;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+figure {
+    margin: 20px;
+    text-align: center;
+}
+
+figure>figcaption {
+    font-weight: bold;
+}
+
+div.article>p {
+    text-align: center;
+}
+
+div.article>h2 {
+    text-align: center;
+}
+
+div.article>a {
+    text-align: center;
+    margin: 20px;
+    color: #000;
+    background-color: #31d2f2;
+    border-color: #25cff2;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+/* ARCHIVES */
+aside {
+    padding-bottom: 50px;
+}
+
+h2 {
+    margin-left: 50px;
+}
+
+div.archives {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+div.archive {
+    background-color: white;
+    border: 1px solid #e3f2fd;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    border: 1px solid #e3f2fd;
+    width: 1200px;
+}
+
+div.archive>img {
+    width: 100px;
+    height: 100px;
+    margin: 20px 50px 20px 20px;
+    float: left;
+}
+
+div.archive>h3 {
+    margin-left: 20px;
+}

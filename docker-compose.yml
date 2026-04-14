@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile-Apache
+    container_name: php73
+    depends_on:
+      - db
+    volumes:
+      - ./php:/var/www/html
+    ports:
+      - "2000:80"
+    restart: unless-stopped
+    networks:
+      - backend
+
+  db:
+    container_name: mysql8
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: scg
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+    ports:
+      - "2001:3306"
+    restart: unless-stopped
+    networks:
+      - backend
+
+  phpmya:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin
+    depends_on:
+      - db
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+      UPLOAD_LIMIT: 20M
+    ports:
+      - "2002:80"
+    restart: unless-stopped
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge

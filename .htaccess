@@ -1,0 +1,3 @@
+<FilesMatch "^composer\.(json|lock)$">
+    Require all denied
+</FilesMatch>

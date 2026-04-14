@@ -1,0 +1,37 @@
+FROM php:7.3-apache
+
+RUN apt-get update && apt-get install -y \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev \
+    zlib1g-dev \
+    libwebp-dev \
+    cron nano unzip git libzip-dev zip \
+    && docker-php-ext-install gd mysqli pdo pdo_mysql \
+    && rm -rf /var/lib/apt/lists/*
+
+# Composer
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
+    && php -r "unlink('composer-setup.php');"
+
+WORKDIR /var/www/html
+
+# 1. Copier seulement composer d'abord (CACHE OPTIMISÉ)
+COPY composer.json composer.lock* ./
+
+# 2. Installer dépendances
+RUN composer install --no-interaction --no-dev --optimize-autoloader
+
+# 3. Copier le reste du projet
+COPY . /var/www/html
+
+RUN ln -snf /usr/share/zoneinfo/UTC /etc/localtime && echo "UTC" > /etc/timezone
+
+RUN mkdir -p /var/www/html/documents && \
+    chown -R www-data:www-data /var/www/html/documents && \
+    chmod -R 775 /var/www/html/documents
+
+EXPOSE 80
+
+CMD ["apache2-foreground"]
