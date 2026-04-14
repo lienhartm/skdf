@@ -3,11 +3,6 @@
 - Ski club de Guebwiller
 - Chalet refuge du Roedelen
 
-
-## 📊 Langages les plus utilisés
-
-![Top Langs](https://github-readme-stats-sigma-five.vercel.app/api/top-langs/?username=lienhartm&layout=compact)
-
 ## Demandes
 
 - Refonte du site internet
