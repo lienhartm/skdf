@@ -1,5 +1,7 @@
 # Site Internet du Club de ski de fond de Guebwiller
 
+![Top Langs](https://github-readme-stats-sigma-five.vercel.app/api/top-langs/?username=lienhartm&layout=compact)
+
 ## Quick setup — if you’ve done this kind of thing before
 
 Get started by creating a new file or uploading an existing file. We recommend every repository include a README, LICENSE, and .gitignore.
