@@ -1,0 +1,169 @@
+html {
+    background-image: url('../media/back.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+nav,
+header,
+main,
+footer,
+h6 {
+    background-color: rgba(255, 255, 255, 0.8);
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+hr {
+    width: 20%;
+    margin: 50px auto;
+}
+
+/* TELESCRIPT (Text Carousel) */
+nav.telescript {
+    text-align: center;
+    font-weight: bold;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.5s ease-in-out;
+    color: #0d6efd;
+    font-size: 1.2rem;
+}
+
+/* HEADER */
+header {
+    text-align: center;
+    background-size: cover;
+    background-position: center;
+    transition: background-image 1s ease-in-out;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+div.header>img {
+    margin: 30px;
+}
+
+h1 {
+    color: white;
+    text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+    margin: auto;
+}
+
+/* NAV */
+nav.nav {
+    text-align: center;
+}
+
+nav.nav>a {
+    padding: 10px;
+    background: white;
+    box-shadow: 1px 1px 1px black, 0 0 2px blue, 0 0 3px darkblue;
+    border-radius: 5px;
+    margin-inline: 1px;
+}
+
+nav.nav>a:hover {
+    border-bottom: 1px solid #0a58ca;
+    text-decoration: none;
+}
+
+main {
+    padding-top: 50px;
+}
+
+main>p {
+    margin-left: 50px;
+}
+
+/* FOOTER */
+footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+div.footer {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+div.footer>a {
+    margin: 5px;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+address {
+    text-align: center;
+}
+
+h6 {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+h6 img {
+  margin-right: 10px;
+}
+
+/* Lightbox Modal */
+.lightbox-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.lightbox-modal.show {
+    display: flex;
+    opacity: 1;
+}
+
+.lightbox-modal img {
+    max-width: 90%;
+    max-height: 90%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}

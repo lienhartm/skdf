@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Ski Club Guebwiller : Refuge Grand-Ballon Roedelen Club Ski de Fond de Guebwiller">
+
+    <title>SCG : Refuge Grand-Ballon Roedelen club ski de fond de Guebwiller</title>
+    <link rel="shortcut icon" type="image/x-icon" href="../media/favicon.ico">
+    <link rel="stylesheet" href="../styles/styles.css">
+    <script src="../scripts/scripts.js"></script>
+    <script src="../scripts/header.js" defer></script>
+    <script src="../scripts/nav.js" defer></script>
+    <script src="../scripts/footer.js" defer></script>
+    <script src="../scripts/h6.js" defer></script>
+
+    <style>
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            margin-bottom: 10px;
+        }
+
+        form>input {
+            width: 20%;
+            margin-bottom: 10px;
+        }
+
+        form>input[type="submit"] {
+            margin: 50px;
+            width: 20%;
+            color: #000;
+            background-color: #31d2f2;
+            border-color: #25cff2;
+            border-radius: 5px;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body oncopy="return false" oncut="return false" onpaste="return false" oncontextmenu="return false"
+    onselectstart="return false" ondragstart="return false">
+
+    <nav class="telescript">
+        <!-- TELESCRIPT -->
+    </nav>
+
+    <header id="header"></header>
+
+    <nav class="nav" id="nav"></nav>
+
+    <main style="background-color: #f5f5f5;">
+
+        <h2>Pour recevoir les newsletter du Ski club de Guebwiller</h2>
+        <h2>Merci de vous inscrire</h2>
+
+        <form method="post">
+            <label for="username">Nom</label>
+            <input type="text" id="username" name="username">
+            <label for="password">Prénom</label>
+            <input type="password" id="password" name="password">
+            <label for="password">Email</label>
+            <input type="password" id="password" name="password">
+            <input type="submit" value="S'inscrire">
+        </form>
+
+        <h2>Les inscrits aux newsletters :</h2>
+
+        <div id="newsletters">
+
+        </div>
+
+    </main>
+
+    <footer id="footer"></footer>
+
+    <h6 id="h6"></h6>
+
+</body>
+
+</html>
