@@ -63,7 +63,7 @@ ob_start();
 </div>
 
 <div class="reservation">
-    <a href="?action=reservation" target="_blank">Réservation
+    <a href="?action=login" target="_blank">Réservation
     </a>
 </div>
 

@@ -68,10 +68,10 @@ h1 {
 
 /* NAV */
 nav.nav {
-    text-align: center;
+    display: flex;
 }
 
-nav.nav>a {
+nav.nav>a, nav.nav>div>a {
     padding: 10px;
     background: white;
     box-shadow: 1px 1px 1px black, 0 0 2px blue, 0 0 3px darkblue;
@@ -84,6 +84,7 @@ nav.nav>a {
 }
 
 nav.nav>a:hover,
+nav.nav>div>a:hover,
 .article:hover,
 div.archive:hover {
     border-bottom: 1px solid #0a58ca;
@@ -137,4 +138,23 @@ address {
 
 h6 {
     text-align: center;
+}
+
+.dropdown {
+  position: relative;
+  align-self: anchor-center;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 130px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 12px 16px;
+  margin: 12px 0 0 0;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
 }

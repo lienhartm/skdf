@@ -30,12 +30,16 @@ ob_start();
 </style>
 
 <form method="post" action="?action=checkLogin">
-    <label for="username">Nom d'utilisateur</label>
-    <input type="text" id="username" name="username">
+    <label for="email">Email</label>
+    <input type="text" id="email" name="email">
     <label for="password">Mot de passe</label>
     <input type="password" id="password" name="password">
     <input type="submit" value="Se connecter">
 </form>
+
+<p><a href="#">Mot de passe oublié ?</a>/<a href="#">S'inscrire</a></p>
+
+<br />
 
 <?php
 $contenu = ob_get_clean();

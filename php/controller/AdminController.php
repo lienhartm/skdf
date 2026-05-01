@@ -12,19 +12,34 @@ class AdminController
         require_once 'view/admin/login.php';
     }
 
-    public function checkLogin($username, $password)
+    public function checkLogin($email, $password)
     {
         $pdo = new BD();
         // Récupération de l'utilisateur
-        $requete = "SELECT * FROM admin WHERE username = :username";
-        $stmt = $pdo->executeRequest($requete, [':username' => $username]);
+        $requete = "SELECT a.username, a.password, n.email, c.nom, c.prenom, c.gardien, c.membre, c.newsletter FROM admin AS a INNER JOIN conscrit_news AS cn ON a.courriel = cn.newsletter_id INNER JOIN newsletter AS n ON cn.newsletter_id = n.id INNER JOIN conscrit AS c ON cn.conscrit_id = c.id WHERE n.email = :courriel";
+        $stmt = $pdo->executeRequest($requete, [':courriel' => $email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+        // Debug: retirer en production
+        // var_dump($user);
+
         if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['admin'] = $user['id'];
-            header('Location: index.php?action=admin');
+            $_SESSION['nom'] = $user['nom'];
+            $_SESSION['prenom'] = $user['prenom'];
+            $_SESSION['email'] = $user['email'];
+            $_SESSION['gardien'] = $user['gardien'];
+            $_SESSION['membre'] = $user['membre'];
+            $_SESSION['newsletter'] = $user['newsletter'];
+            if ($user['username'] == 0) {
+                $_SESSION['admin'] = true;
+                header('Location: index.php?action=admin');
+            } else {
+                $_SESSION['conscrit'] = true;
+                header('Location: index.php?action=conscrit');
+            }
             exit();
         } else {
+            session_destroy();
             $error = "Identifiants incorrects";
             require_once 'view/admin/login.php';
         }
@@ -298,6 +313,24 @@ class AdminController
     public function mode_emploi()
     {
         require_once 'view/admin/emploi/index.php';
+    }
+
+    public function parametre()
+    {
+        require_once 'view/admin/parametre/index.php';
+    }
+
+    public function new_admin($email, $password)
+    {
+        $pdo = new BD();
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $requete = "INSERT INTO admin (username, courriel, password) VALUES (0, :courriel, :password)";
+        $stmt = $pdo->executeRequest($requete, [':courriel' => $email, ':password' => $hashedPassword]);
+
+        $requete ="UPDATE admin SET username = 1 WHERE courriel = :courriel";
+        $stmt = $pdo->executeRequest($requete, [':courriel' => $_SESSION['email']]);
+        header('Location: index.php?action=admin_parametre');
+        exit();
     }
 
 }

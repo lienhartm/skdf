@@ -30,7 +30,7 @@ function test_input($data)
 $action = isset($_GET['action']) ? test_input($_GET['action']) : null;
 
 // Admin login
-$username = isset($_POST['username']) ? test_input($_POST['username']) : null;
+$email = isset($_POST['email']) ? test_input($_POST['email']) : null;
 $password = isset($_POST['password']) ? test_input($_POST['password']) : null;
 
 // newsletter // article
@@ -53,7 +53,7 @@ switch ($action) {
         $adminController->login();
         break;
     case 'checkLogin':
-        $adminController->checkLogin($username, $password);
+        $adminController->checkLogin($email, $password);
         break;
     case 'admin':
         $adminController->dashboard();
@@ -95,6 +95,12 @@ switch ($action) {
         break;
     case 'mode_emploi':
         $adminController->mode_emploi();
+        break;
+    case 'admin_parametre':
+        $adminController->parametre();
+        break;
+    case 'new_admin':
+        $adminController->new_admin($email, $password);
         break;
 
     // WEBSITE

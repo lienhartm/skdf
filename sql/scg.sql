@@ -11,14 +11,30 @@
 --
 CREATE TABLE IF NOT EXISTS admin (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL UNIQUE,
-    courriel VARCHAR(100) NOT NULL,
+    username VARCHAR(50) DEFAULT NULL, -- 0: admin, 1: member, null: conscrit
+    courriel int NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL -- Hash du mot de passe
 );
 
 -- Insertion admin par défaut (user: admin / pass: admin)
 -- Le hash ci-dessous correspond à "admin" hashé avec password_hash() par défaut (BCRYPT)
-INSERT IGNORE INTO admin (username, password) VALUES ('admin', '$2y$10$8RBUa7UleZDeJJG.cDjEne2NkMsuAAfRCTCzCMZCXnb2ESohoARga');
+-- username is status 'admin' : 0 | 'member' : 1 | 'null'
+INSERT IGNORE INTO admin (username, courriel, password) VALUES 
+(0, 1, '$2y$10$8RBUa7UleZDeJJG.cDjEne2NkMsuAAfRCTCzCMZCXnb2ESohoARga'),
+(1, 2, '$2y$10$8RBUa7UleZDeJJG.cDjEne2NkMsuAAfRCTCzCMZCXnb2ESohoARga'),
+(NULL, 3, '$2y$10$8RBUa7UleZDeJJG.cDjEne2NkMsuAAfRCTCzCMZCXnb2ESohoARga'),
+(NULL, 4, '$2y$10$8RBUa7UleZDeJJG.cDjEne2NkMsuAAfRCTCzCMZCXnb2ESohoARga'),
+(NULL, 5, '$2y$10$8RBUa7UleZDeJJG.cDjEne2NkMsuAAfRCTCzCMZCXnb2ESohoARga'),
+(NULL, 6, '$2y$10$8RBUa7UleZDeJJG.cDjEne2NkMsuAAfRCTCzCMZCXnb2ESohoARga'),
+(NULL, 7, '$2y$10$8RBUa7UleZDeJJG.cDjEne2NkMsuAAfRCTCzCMZCXnb2ESohoARga'),
+(NULL, 8, '$2y$10$8RBUa7UleZDeJJG.cDjEne2NkMsuAAfRCTCzCMZCXnb2ESohoARga'),
+(NULL, 9, '$2y$10$8RBUa7UleZDeJJG.cDjEne2NkMsuAAfRCTCzCMZCXnb2ESohoARga'),
+(NULL, 10, '$2y$10$8RBUa7UleZDeJJG.cDjEne2NkMsuAAfRCTCzCMZCXnb2ESohoARga'),
+(NULL, 11, '$2y$10$8RBUa7UleZDeJJG.cDjEne2NkMsuAAfRCTCzCMZCXnb2ESohoARga'),
+(NULL, 12, '$2y$10$8RBUa7UleZDeJJG.cDjEne2NkMsuAAfRCTCzCMZCXnb2ESohoARga'),
+(NULL, 13, '$2y$10$8RBUa7UleZDeJJG.cDjEne2NkMsuAAfRCTCzCMZCXnb2ESohoARga'),
+(NULL, 14, '$2y$10$8RBUa7UleZDeJJG.cDjEne2NkMsuAAfRCTCzCMZCXnb2ESohoARga'),
+(NULL, 15, '$2y$10$8RBUa7UleZDeJJG.cDjEne2NkMsuAAfRCTCzCMZCXnb2ESohoARga');
 
 --
 --
@@ -38,6 +54,7 @@ CREATE TABLE IF NOT EXISTS newsletter (
 --
 -- insertion newsletter par défaut
 INSERT INTO newsletter (email) VALUES
+('lienhartm8@gmail.com'),
 ('jean.dupont@example.com'),
 ('marie.lefebvre@test.fr'),
 ('t.petit@gmail.com'),
@@ -76,6 +93,7 @@ CREATE TABLE IF NOT EXISTS conscrit (
 -- insertion conscrits par défaut
 
 INSERT INTO conscrit (nom, prenom, gardien, newsletter, date_inscription) VALUES
+('Lienhart', 'Mathieu', TRUE, TRUE, '2023-01-10 09:00:00'),
 ('Dupont', 'Jean', FALSE, TRUE, '2023-01-15 10:30:00'),
 ('Lefebvre', 'Marie', TRUE, FALSE, '2023-02-20 14:45:00'),
 ('Petit', 'Thomas', FALSE, TRUE, '2023-03-05 09:15:00'),
@@ -116,4 +134,5 @@ INSERT INTO conscrit_news (conscrit_id, newsletter_id) VALUES
 (7, 10),
 (8, 11),
 (9, 13),
-(10, 14);
+(10, 14),
+(11, 15);

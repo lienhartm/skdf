@@ -35,10 +35,9 @@
             <a href="?action=document">Documents</a>
             <a href="?action=markdown">Markdown</a>
             <a href="?action=mode_emploi">Mode d'emploi</a>
+            <a href="?action=admin_parametre">Paramètres</a>
             <?php if (isset($_SESSION['admin'])) { ?>
                 <a href="?action=logout">Déconnexion</a>
-            <?php } else { ?>
-                <a href="?action=login">Connexion</a>
             <?php } ?>
         </nav>
 

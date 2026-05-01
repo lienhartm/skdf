@@ -77,7 +77,18 @@
             <a href="?action=resultat">Résultats</a>
             <a href="?action=acces">Accès Refuge</a>
             <a href="?action=contact">Contact</a>
-            <a href="?action=login">Connection</a>
+            <?php if (isset($_SESSION['conscrit'])): ?>
+                <div class="dropdown">
+                    <a>Espace membre</a><br />
+                    <div class="dropdown-content">
+                        <a href="?action=profile">Profil</a><br />
+                        <a href="?action=reservations">Réservations</a><br />
+                        <a href="?action=logout">Déconnexion</a>
+                    </div>
+                </div>
+            <?php else: ?>
+                <a href="?action=login">Connection</a>
+            <?php endif; ?>
         </nav>
     </header>
 
