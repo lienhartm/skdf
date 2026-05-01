@@ -46,6 +46,16 @@ class WebSiteController
         require_once 'view/refuge/index.php';
     }
 
+    public function reservation()
+    {
+        require_once 'view/reservation/index.php';
+    }
+
+    public function paypal()
+    {
+        require_once 'view/paypal/index.php';
+    }
+
     public function club()
     {
 
@@ -64,11 +74,11 @@ class WebSiteController
         $actus = json_decode($actusJson, true);
         function parseDateFr($date)
         {
-            [$d, $m, $y] = explode('/', $date);
+            [$d, $m, $y] = explode('-', $date);
             return mktime(0, 0, 0, $m, $d, $y);
         }
 
-        usort($presses, function ($a, $b) {
+        usort($actus, function ($a, $b) {
             return parseDateFr($b['date']) <=> parseDateFr($a['date']);
         });
         require_once 'view/actualite/index.php';

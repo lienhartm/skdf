@@ -26,10 +26,13 @@
             <h1 class="title">Ski Club Guebwiller</h1>
         </div>
 
-        <nav class="nav ">
-            <a href="?action=write_newsletter">Newsletter</a>
-            <a href="?action=write_article">Articles</a>
-            <a href="?action=upload_doc">Documents</a>
+        <nav class="nav">
+            <a href="?action=inscrit">Inscrit</a>
+            <a href="?action=newsletter">Newsletter</a>
+            <a href="?action=article">Articles</a>
+            <a href="?action=gardien">Gardiens</a>
+            <a href="?action=reservation">Réservations</a>
+            <a href="?action=document">Documents</a>
             <a href="?action=markdown">Markdown</a>
             <a href="?action=mode_emploi">Mode d'emploi</a>
             <?php if (isset($_SESSION['admin'])) { ?>

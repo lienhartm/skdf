@@ -62,6 +62,10 @@ ob_start();
     </table>
 </div>
 
+<div class="reservation">
+    <a href="?action=reservation" target="_blank">Réservation
+    </a>
+</div>
 
 <div class="refuge">
     <h4>Des photos du refuge du Roedelen</h4>
@@ -107,6 +111,8 @@ ob_start();
         </li>
     </ul>
 </div>
+
+<br />
 
 <?php
 $contenu = ob_get_clean();

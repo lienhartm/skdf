@@ -1,10 +1,10 @@
 [
     {
         "id": 1,
-        "date": "11/12/2022",
+        "date": "11-12-2022",
         "auteur": "Nicolas",
         "type": "club",
-        "titre": "Ecole de ski Enfant 2022/2023",
+        "titre": "Ecole de ski Enfant 2022\/2023",
         "article": "Bonjour,\n\nL'hiver dernier notre école de ski des enfants à fonctionné de mi-décembre à fin mars.\n\nNous avons fait 14 sorties en tout dont même une après-midi de ski alpin.\n\nL'enseignement du ski de fond consistait en des exercices ludiques d'équilibre, de gestes techniques, et aussi du ski de fond hors des pistes ou les jeunes se sont bien amusés.\n\nLes transports vers le Markstein, les trois fours ou la Schlucht et les retours, étaient toujours des moments appréciés, tous réunis dans la camionnette.\n\nCette année nous avons acheté des chaussures de ski de fond sportives toutes neuves, ainsi les équipements complets qui sont attribués aux enfants sont d'un très bon niveau et neufs.\n\nPour rappel :\n\n\n**Le Ski Club Guebwiller** à ouvert l'année précédente **une école de ski de fond destinée aux jeunes enfants âgés de 8 à 13ans.**\n\nL’objectif de cette école est l’**initiation au ski de fond et la découverte du massif montagnard des Vosges.** \n\nL’encadrement sera assuré par des moniteurs fédéraux de la Fédération Française de ski.\n\nLes cours auront lieu les samedis après midi et pendant des mini stages pendant les vacances scolaires d’hiver.\n\nNous participerons également aux rencontres nordiques organisés sur le massif.\n\nEn cas d’enneigement insuffisant, des activités de plein air seront proposées.\n\nL’inscription à l’école de ski comprendra :\n\n- La licence Carte Neige FFS et l’adhésion au Ski Club Guebwiller\n- La mise à disposition d’un équipement de type classique (skis, bâtons et chaussures)\n- Le transport depuis le point de rendez-vous aux stations de ski, le forfait pour l’accès aux pistes de ski de fond\n- Les inscriptions et les déplacements aux rencontres nordiques\n- Les différentes activités proposées en automne et au printemps.\n\nContact : Bernard Riethmuller 06 77 79 53 44\n\nA bientôt sur les pistes\n\nSportivement Bernard",
         "images": [
             "ecole1.png",
@@ -13,7 +13,7 @@
     },
     {
         "id": 2,
-        "date": "03/08/2022",
+        "date": "03-08-2022",
         "auteur": "Nicolas",
         "type": "refuge",
         "titre": "Nouvelle tranche de travaux 2022",
@@ -22,7 +22,7 @@
     },
     {
         "id": 3,
-        "date": "21/04/2022",
+        "date": "21-04-2022",
         "auteur": "Nicolas",
         "type": "event",
         "titre": "Carnaval au Markstein",
@@ -30,6 +30,26 @@
         "images": [
             "carnaval1.jpg",
             "carnaval2.jpg"
+        ]
+    },
+    {
+        "id": 4,
+        "date": "21-04-2026",
+        "auteur": "Michael",
+        "type": "event",
+        "titre": "Charme",
+        "article": "TEST",
+        "images": []
+    },
+    {
+        "titre": "TEST 2",
+        "auteur": "Michael",
+        "date": "2026-04-21",
+        "type": "event",
+        "article": "TEST2 Pour preview",
+        "images": [
+            "img_69e7639adfbc37.44312168.jpg",
+            "img_69e7639adff1a3.88872322.jpg"
         ]
     }
 ]

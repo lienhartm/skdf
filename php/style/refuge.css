@@ -4,7 +4,6 @@
 
     div.refuge {
         margin: 50px;
-        padding-bottom: 50px;
     }
 
     table {
@@ -90,3 +89,28 @@
     .reference>li {
         padding: 5px;
     }
+
+    .reservation {
+        display: flex;
+        justify-content: center;
+    }
+
+    .reservation>a {
+        text-align: center;
+        margin: 20px;
+        padding: 10px;
+        background: white;
+        box-shadow: 1px 1px 1px black, 0 0 2px blue, 0 0 3px darkblue;
+        border-radius: 5px;
+        margin-inline: 1px;
+
+    }
+
+    .reservation>a:hover {
+        border-bottom: 1px solid #0a58ca;
+        border-right: 1px solid #0a58ca;
+        box-shadow: 0 0 10px rgba(49, 210, 242, 0.4);
+        text-decoration: none;
+    }
+
+    

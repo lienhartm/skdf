@@ -30,23 +30,90 @@ INSERT IGNORE INTO admin (username, password) VALUES ('admin', '$2y$10$8RBUa7Ule
 
 CREATE TABLE IF NOT EXISTS newsletter (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(100) NOT NULL UNIQUE
+);
+
+
+--
+--
+-- insertion newsletter par défaut
+INSERT INTO newsletter (email) VALUES
+('jean.dupont@example.com'),
+('marie.lefebvre@test.fr'),
+('t.petit@gmail.com'),
+('julie.roux@outlook.com'),
+('durand.nicolas@free.fr'),
+('sophie.morel@orange.fr'),
+('lucas.fournier@sfr.fr'),
+('emma.girard@yahoo.fr'),
+('andre.clara@proton.me'),
+('paul.mercier@laposte.net'),
+('marie.martin@testmail.com'),
+('paul.durand@mail.fr'),
+('lucie.bernard@demo.org'),
+('antoine.petit@sample.net');
+
+--
+--
+--
+
+--
+-- Table des conscrits
+--
+
+CREATE TABLE IF NOT EXISTS conscrit (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(50) NOT NULL,
     prenom VARCHAR(50) NOT NULL,
-    email VARCHAR(100) NOT NULL,
+    gardien BOOLEAN NOT NULL DEFAULT FALSE,
+    membre BOOLEAN NOT NULL DEFAULT FALSE,
+    newsletter BOOLEAN NOT NULL DEFAULT TRUE,
     date_inscription DATETIME NOT NULL
 );
 
 --
 --
--- insertion newsletter par défaut
-INSERT INTO newsletter (nom, prenom, email, date_inscription) VALUES
-('Dupont', 'Jean', 'jean.dupont@example.com', '2026-04-13 08:05:00'),
-('Lefebvre', 'Marie', 'marie.lefebvre@test.fr', '2026-04-13 08:10:00'),
-('Petit', 'Thomas', 't.petit@gmail.com', '2026-04-13 08:15:00'),
-('Roux', 'Julie', 'julie.roux@outlook.com', '2026-04-13 08:20:00'),
-('Durand', 'Nicolas', 'durand.nicolas@free.fr', '2026-04-13 08:25:00'),
-('Morel', 'Sophie', 'sophie.morel@orange.fr', '2026-04-13 08:30:00'),
-('Fournier', 'Lucas', 'lucas.fournier@sfr.fr', '2026-04-13 08:35:00'),
-('Girard', 'Emma', 'emma.girard@yahoo.fr', '2026-04-13 08:40:00'),
-('Andre', 'Clara', 'andre.clara@proton.me', '2026-04-13 08:45:00'),
-('Mercier', 'Paul', 'paul.mercier@laposte.net', '2026-04-13 08:50:00');
+-- insertion conscrits par défaut
+
+INSERT INTO conscrit (nom, prenom, gardien, newsletter, date_inscription) VALUES
+('Dupont', 'Jean', FALSE, TRUE, '2023-01-15 10:30:00'),
+('Lefebvre', 'Marie', TRUE, FALSE, '2023-02-20 14:45:00'),
+('Petit', 'Thomas', FALSE, TRUE, '2023-03-05 09:15:00'),
+('Roux', 'Julie', TRUE, TRUE, '2023-04-10 16:00:00'),
+('Durand', 'Nicolas', FALSE, FALSE, '2023-05-25 11:20:00'),
+('Morel', 'Sophie', TRUE, FALSE, '2023-06-30 13:50:00'),
+('Fournier', 'Lucas', FALSE, TRUE, '2023-07-18 08:40:00'),
+('Girard', 'Emma', TRUE, TRUE, '2023-08-22 17:30:00'),
+('Clara', 'André', FALSE, FALSE, '2023-09-12 12:10:00'),
+('Mercier', 'Paul', TRUE, FALSE, '2023-10-05 15:25:00');
+
+--
+--
+--
+
+--
+-- Table de liaison entre conscrits et newsletter
+--
+
+CREATE TABLE IF NOT EXISTS conscrit_news (
+    conscrit_id INT NOT NULL,
+    newsletter_id INT NOT NULL,
+    PRIMARY KEY (conscrit_id, newsletter_id),
+    FOREIGN KEY (conscrit_id) REFERENCES conscrit(id) ON DELETE CASCADE,
+    FOREIGN KEY (newsletter_id) REFERENCES newsletter(id) ON DELETE CASCADE
+);
+
+--
+--
+-- insertion conscrit_news par défaut
+INSERT INTO conscrit_news (conscrit_id, newsletter_id) VALUES
+(1, 1),
+(2, 2),
+(3, 4),
+(4, 5),
+(5, 8),
+(6, 9),
+(7, 10),
+(8, 11),
+(9, 13),
+(10, 14);

@@ -1,3 +1,11 @@
+h2 {
+    text-align: center;
+}
+
+#actualites {
+    padding: 50px;
+}
+
 .actualite {
     display: flex;
     flex-direction: column;
@@ -16,7 +24,7 @@
 
 .article-content>img {
     float: left;
-    margin-right: 50px;
+    margin: 0 50px 50px 0;
 }
 
 span {

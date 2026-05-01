@@ -29,8 +29,12 @@ COPY . /var/www/html
 RUN ln -snf /usr/share/zoneinfo/UTC /etc/localtime && echo "UTC" > /etc/timezone
 
 RUN mkdir -p /var/www/html/documents && \
-    chown -R www-data:www-data /var/www/html/documents && \
-    chmod -R 775 /var/www/html/documents
+    chmod -R 777 /var/www/html/documents && \
+    chown -R www-data:www-data /var/www/html/documents
+
+RUN mkdir -p /var/www/html/documents/actualite && \
+    chmod -R 777 /var/www/html/documents/actualite && \
+    chown -R www-data:www-data /var/www/html/documents/actualite
 
 EXPOSE 80
 

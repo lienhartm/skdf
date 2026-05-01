@@ -47,7 +47,7 @@ class Mail
             // Contenu
             $this->mail->isHTML(true);
             $this->mail->Subject = 'Test PHPMailer';
-            $this->mail->Body = 'Ceci est un <b>test</b> depuis PHPMailer.';
+            $this->mail->Body = 'Ceci est un <b>test</b> depuis PHPMailer.<br>Ski club de guebwiller';
             $this->mail->AltBody = '(Alt) Ceci est un test depuis PHPMailer.';
 
             // Envoi
@@ -60,7 +60,9 @@ class Mail
 }
 
 // Test
+/*
 $a = new Mail();
 $a->executeMailing();
+*/
 
 ?>

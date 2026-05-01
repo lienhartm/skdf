@@ -1,0 +1,55 @@
+#upload {
+    padding: 50px;
+}
+
+.liste {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.liste>ul {
+    width: 50%;
+}
+
+.upload-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.upload-form>form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.upload-form>form>label {
+    margin-top: 10px;
+}
+
+.upload-form>form>input {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.upload-form>form>textarea {
+    width: 20%;
+    margin-bottom: 10px;
+}
+
+.upload-form>form>div {
+    width: 20%;
+    margin-bottom: 10px;
+}
+
+.upload-form>form>input[type="submit"] {
+    margin: 50px;
+    width: 20%;
+    color: #000;
+    background-color: #31d2f2;
+    border-color: #25cff2;
+    border-radius: 5px;
+    padding: 10px;
+}
