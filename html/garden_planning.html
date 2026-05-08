@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Ski Club Guebwiller : Refuge Grand-Ballon Roedelen Club Ski de Fond de Guebwiller">
+
+    <title>SCG : Refuge Grand-Ballon Roedelen club ski de fond de Guebwiller</title>
+    <link rel="shortcut icon" type="image/x-icon" href="../media/favicon.ico">
+    <link rel="stylesheet" href="../styles/styles.css">
+    <script src="../scripts/scripts.js"></script>
+    <script src="../scripts/header.js" defer></script>
+    <script src="../scripts/nav.js" defer></script>
+    <script src="../scripts/footer.js" defer></script>
+    <script src="../scripts/h6.js" defer></script>
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+<style>
+body {
+  font-family: Arial;
+  margin: 20px;
+}
+
+#calendar {
+  max-width: 900px;
+  margin-bottom: 30px;
+}
+
+form {
+  max-width: 900px;
+  padding: 15px;
+  border: 1px solid #ccc;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+}
+
+select, input {
+  width: 100%;
+  padding: 5px;
+}
+
+button {
+  margin-top: 10px;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.extra {
+  margin-top: 5px;
+}
+
+.garden {
+    margin: auto
+}
+</style>
+</head>
+
+<body oncopy="return false" oncut="return false" onpaste="return false" oncontextmenu="return false"
+    onselectstart="return false" ondragstart="return false">
+
+    <nav class="telescript">
+        <!-- TELESCRIPT -->
+    </nav>
+
+    <header id="header"></header>
+
+    <nav class="nav" id="nav"></nav>
+
+    <main style="background-color: #f5f5f5;">
+
+        <section class="garden">
+            <div class="garden">
+            <h2>📅 Planning des gardiens</h2>
+
+            <div id="calendar"></div>
+
+            <form id="formGarde">
+
+            <label>Gardien principal :</label>
+            <select id="gardienSelect"></select>
+
+            <label>Date début :</label>
+            <input type="date" id="dateDebut" required>
+
+            <label>Date fin :</label>
+            <input type="date" id="dateFin" required>
+
+            <button type="button" id="addGardien">➕ Ajouter un gardien</button>
+
+            <div id="extras"></div>
+
+            <button type="submit">Créer la garde</button>
+
+            </form>
+        </div>
+        </section>
+
+<script>
+// ==========================
+// Données
+// ==========================
+const gardiens = [
+  { id: 1, nom: "Alice", couleur: "#e74c3c" },
+  { id: 2, nom: "Bob", couleur: "#3498db" },
+  { id: 3, nom: "Charlie", couleur: "#2ecc71" }
+];
+
+// ==========================
+// Init select
+// ==========================
+const select = document.getElementById("gardienSelect");
+
+gardiens.forEach(g => {
+  let opt = document.createElement("option");
+  opt.value = g.id;
+  opt.textContent = g.nom;
+  select.appendChild(opt);
+});
+
+// ==========================
+// Calendar
+// ==========================
+const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+  initialView: 'dayGridMonth',
+  locale: 'fr',
+  height: "auto",
+
+  headerToolbar: {
+    left: 'prev,next today',
+    center: 'title',
+    right: ''
+  },
+
+  events: JSON.parse(localStorage.getItem("events") || "[]") // storage des gardes
+});
+
+calendar.render();
+
+// ==========================
+// Ajouter gardien extra
+// ==========================
+document.getElementById("addGardien").addEventListener("click", () => {
+  const div = document.createElement("div");
+  div.className = "extra";
+
+  const sel = document.createElement("select");
+
+  gardiens.forEach(g => {
+    let opt = document.createElement("option");
+    opt.value = g.id;
+    opt.textContent = g.nom;
+    sel.appendChild(opt);
+  });
+
+  div.appendChild(sel);
+  document.getElementById("extras").appendChild(div);
+});
+
+// ==========================
+// Création garde
+// ==========================
+document.getElementById("formGarde").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const debut = document.getElementById("dateDebut").value;
+  const fin = document.getElementById("dateFin").value;
+
+  if (fin <= debut) {
+    alert("La date de fin doit être après le début");
+    return;
+  }
+
+  // gardien principal
+  const mainId = parseInt(select.value);
+  const main = gardiens.find(g => g.id === mainId);
+
+  // extras
+  const extraSelects = document.querySelectorAll("#extras select");
+
+  const extras = Array.from(extraSelects).map(sel => {
+    const g = gardiens.find(x => x.id == sel.value);
+    return g;
+  });
+
+  const tous = [main, ...extras];
+
+  // titre
+  const title = tous.map(g => g.nom).join(", ");
+
+  // couleur (celle du premier)
+  const color = main.couleur;
+
+  const event = {
+    title: title,
+    start: debut,
+    end: fin,
+    color: color
+  };
+
+  calendar.addEvent(event);
+
+  // sauvegarde
+  const events = JSON.parse(localStorage.getItem("events") || "[]");
+  events.push(event);
+  localStorage.setItem("events", JSON.stringify(events));
+
+  // reset
+  document.getElementById("formGarde").reset();
+  document.getElementById("extras").innerHTML = "";
+});
+
+</script>
+
+    </main>
+
+    <footer id="footer"></footer>
+
+    <h6 id="h6"></h6>
+
+</body>
+
+</html>
