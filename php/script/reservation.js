@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const reservedFile = '/documents/reservation/sejour.json';
     const calendarRoot = document.querySelector('.calendar');
     const monthTitle = calendarRoot.querySelector('.month-title');
     const prevBtn = calendarRoot.querySelector('.prev');
@@ -74,28 +73,16 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function loadReservations() {
-        fetch(reservedFile)
-            .then(function (res) {
-                if (!res.ok) {
-                    throw new Error('Impossible de charger les réservations.');
-                }
-                return res.json();
-            })
-            .then(function (data) {
-                data.forEach(function (item) {
-                    reservedRanges.push({
-                        start: parseDate(item.date_debut),
-                        end: parseDate(item.date_fin),
-                        totalPersons: (parseInt(item.nb_adulte, 10) || 0) + (parseInt(item.nb_enfant, 10) || 0),
-                    });
-                });
-                buildBlockedDates();
-                renderCalendar();
-            })
-            .catch(function (error) {
-                showError(error.message);
-                renderCalendar();
+        // Utiliser les réservations passées directement depuis PHP
+        reservations.forEach(function (item) {
+            reservedRanges.push({
+                start: parseDate(item.date_debut),
+                end: parseDate(item.date_fin),
+                totalPersons: (parseInt(item.nb_adulte, 10) || 0) + (parseInt(item.nb_enfant, 10) || 0),
             });
+        });
+        buildBlockedDates();
+        renderCalendar();
     }
 
     function buildBlockedDates() {

@@ -42,10 +42,11 @@
         "images": []
     },
     {
-        "titre": "TEST 2",
-        "auteur": "Michael",
+        "id": 5,
         "date": "2026-04-21",
+        "auteur": "Michael",
         "type": "event",
+        "titre": "TEST 2",
         "article": "TEST2 Pour preview",
         "images": [
             "img_69e7639adfbc37.44312168.jpg",

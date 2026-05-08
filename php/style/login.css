@@ -1,0 +1,28 @@
+section.login >form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+label {
+    margin-bottom: 10px;
+}
+
+form>input {
+    width: 20%;
+    margin-bottom: 10px;
+}
+
+form>input[type="submit"] {
+    margin: 50px;
+    width: 20%;
+    color: #000;
+    background-color: #31d2f2;
+    border-color: #25cff2;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+p {
+    text-align: center;
+}

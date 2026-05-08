@@ -2,7 +2,6 @@
 
 class AdminController
 {
-
     public function login()
     {
         if (isset($_SESSION['admin'])) {
@@ -20,29 +19,115 @@ class AdminController
         $stmt = $pdo->executeRequest($requete, [':courriel' => $email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Debug: retirer en production
-        // var_dump($user);
-
         if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['nom'] = $user['nom'];
-            $_SESSION['prenom'] = $user['prenom'];
-            $_SESSION['email'] = $user['email'];
-            $_SESSION['gardien'] = $user['gardien'];
-            $_SESSION['membre'] = $user['membre'];
-            $_SESSION['newsletter'] = $user['newsletter'];
-            if ($user['username'] == 0) {
+            $code = random_int(100000, 999999);
+            $_SESSION['pending_login'] = [
+                'email' => $user['email'],
+                'username' => $user['username'],
+                'nom' => $user['nom'],
+                'prenom' => $user['prenom'],
+                'gardien' => $user['gardien'],
+                'membre' => $user['membre'],
+                'newsletter' => $user['newsletter'],
+                'code' => (string) $code,
+                'expires_at' => time() + 600,
+            ];
+
+            $mail = new Mail();
+            $sent = $mail->codeMailing($user['email'], $code);
+            if (!$sent) {
+                session_unset();
+                session_destroy();
+                $error = 'Impossible d\'envoyer le code de confirmation. Veuillez réessayer plus tard.';
+                require_once 'view/admin/login.php';
+                return;
+            }
+
+            header('Location: index.php?action=confirm');
+            exit();
+        }
+
+        session_unset();
+        session_destroy();
+        $error = 'Identifiants incorrects';
+        require_once 'view/admin/login.php';
+    }
+
+    public function confirm($error = null)
+    {
+        if (!isset($_SESSION['pending_login']) || empty($_SESSION['pending_login']['email'])) {
+            header('Location: index.php?action=login');
+            exit();
+        }
+
+        if (isset($_SESSION['confirm_error'])) {
+            $error = $_SESSION['confirm_error'];
+            unset($_SESSION['confirm_error']);
+        }
+
+        require_once 'view/admin/confirm.php';
+    }
+
+    public function resendCode()
+    {
+        if (!isset($_SESSION['pending_login']['email'])) {
+            header('Location: index.php?action=login');
+            exit();
+        }
+
+        $email = $_SESSION['pending_login']['email'];
+        $code = random_int(100000, 999999);
+        $_SESSION['pending_login']['code'] = (string) $code;
+        $_SESSION['pending_login']['expires_at'] = time() + 600;
+
+        $mail = new Mail();
+        $sent = $mail->codeMailing($email, $code);
+        if (!$sent) {
+            $_SESSION['confirm_error'] = 'Impossible de renvoyer le code. Essayez plus tard.';
+        }
+
+        header('Location: index.php?action=confirm');
+        exit();
+    }
+
+    public function checkCode($code)
+    {
+        if (!isset($_SESSION['pending_login']['code'])) {
+            header('Location: index.php?action=login');
+            exit();
+        }
+
+        $pending = $_SESSION['pending_login'];
+        if (time() > $pending['expires_at']) {
+            session_unset();
+            session_destroy();
+            $error = 'Le code a expiré. Veuillez vous reconnecter.';
+            require_once 'view/admin/login.php';
+            return;
+        }
+
+        if ($code === $pending['code']) {
+            $_SESSION['nom'] = $pending['nom'];
+            $_SESSION['prenom'] = $pending['prenom'];
+            $_SESSION['email'] = $pending['email'];
+            $_SESSION['gardien'] = $pending['gardien'];
+            $_SESSION['membre'] = $pending['membre'];
+            $_SESSION['newsletter'] = $pending['newsletter'];
+
+            if ($pending['username'] == 0) {
                 $_SESSION['admin'] = true;
+                unset($_SESSION['pending_login']);
                 header('Location: index.php?action=admin');
             } else {
                 $_SESSION['conscrit'] = true;
+                unset($_SESSION['pending_login']);
                 header('Location: index.php?action=conscrit');
             }
             exit();
-        } else {
-            session_destroy();
-            $error = "Identifiants incorrects";
-            require_once 'view/admin/login.php';
         }
+
+        $error = 'Code incorrect. Vérifiez votre email et réessayez.';
+        require_once 'view/admin/confirm.php';
     }
 
     public function dashboard()
@@ -64,7 +149,7 @@ class AdminController
     public function inscrit()
     {
         $pdo = new BD();
-        $requete = "SELECT * FROM newsletter";
+        $requete = "SELECT a.username, n.email, c.nom, c.prenom, c.gardien, c.membre, c.newsletter, c.date_inscription FROM admin AS a INNER JOIN conscrit_news AS cn ON a.courriel = cn.newsletter_id INNER JOIN newsletter AS n ON cn.newsletter_id = n.id INNER JOIN conscrit AS c ON cn.conscrit_id = c.id";
         $stmt = $pdo->executeRequest($requete, []);
         $inscrits = $stmt->fetchAll(PDO::FETCH_ASSOC);
         require_once 'view/admin/inscrit/index.php';
@@ -88,6 +173,15 @@ class AdminController
             exit();
         }
 
+        // Vérifier que c'est un fichier CSV
+        $mime = mime_content_type($file['tmp_name']);
+        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        if (!in_array($ext, ['csv', 'txt']) && $mime !== 'text/plain' && $mime !== 'text/csv') {
+            $_SESSION['flash'] = '❌ Seuls les fichiers CSV sont acceptés.';
+            header('Location: index.php?action=inscrit');
+            exit();
+        }
+
         // Ouvrir le fichier CSV (délimiteur virgule)
         $handle = fopen($file['tmp_name'], 'r');
         if ($handle === false) {
@@ -97,36 +191,123 @@ class AdminController
         }
 
         $pdo = new BD();
-        $insert = "INSERT INTO newsletter (nom, prenom, email, date_inscription) VALUES (:nom, :prenom, :email, :date)";
+        $insertConscrit = "INSERT INTO conscrit (nom, prenom, gardien, membre, newsletter, date_inscription) VALUES (:nom, :prenom, 0, 0, 1, :date_inscription)";
+        $insertNewsletter = "INSERT INTO newsletter (nom, prenom, email, date_inscription) VALUES (:nom, :prenom, :email, :date_inscription)";
+        $insertRelation = "INSERT INTO conscrit_news (conscrit_id, newsletter_id) VALUES (:conscrit_id, :newsletter_id)";
+
         $rowNumber = 0;
+        $successCount = 0;
+        $skipCount = 0;
+        $errorCount = 0;
+        $errors = [];
+
         while (($row = fgetcsv($handle, 1000, ',')) !== false) {
             $rowNumber++;
-            // Ignorer la première ligne si elle contient les en‑têtes
-            if ($rowNumber == 1 && (stripos($row[0], 'nom') !== false)) {
+
+            // Ignorer la première ligne si elle contient les en-têtes
+            if ($rowNumber == 1 && isset($row[0]) && stripos($row[0], 'nom') !== false) {
                 continue;
             }
+
             // Sauter les lignes incomplètes
             if (count($row) < 3) {
+                $errorCount++;
+                $errors[] = "Ligne $rowNumber : données insuffisantes (< 3 colonnes).";
                 continue;
             }
+
             list($nom, $prenom, $email) = $row;
             $nom = trim($nom);
             $prenom = trim($prenom);
             $email = trim($email);
-            if ($nom === '' && $prenom === '' && $email === '') {
+
+            // Valider les données
+            if (empty($nom) || empty($prenom) || empty($email)) {
+                $skipCount++;
+                $errors[] = "Ligne $rowNumber : nom, prénom ou email vide.";
                 continue;
             }
-            $pdo->executeRequest($insert, [
-                ':nom' => $nom,
-                ':prenom' => $prenom,
-                ':email' => $email,
-                ':date_inscription' => date('Y-m-d H:i:s')
-            ]);
+
+            // Valider le format email
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $errorCount++;
+                $errors[] = "Ligne $rowNumber : email invalide ('$email').";
+                continue;
+            }
+
+            // Vérifier les doublons
+            $checkQuery = "SELECT COUNT(*) as count FROM newsletter WHERE LOWER(email) = LOWER(:email)";
+            $checkStmt = $pdo->executeRequest($checkQuery, [':email' => $email]);
+            $existing = $checkStmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($existing['count'] > 0) {
+                $skipCount++;
+                $errors[] = "Ligne $rowNumber : email '$email' déjà enregistré.";
+                continue;
+            }
+
+            try {
+                // Insérer dans conscrit
+                $pdo->executeRequest($insertConscrit, [
+                    ':nom' => $nom,
+                    ':prenom' => $prenom,
+                    ':date_inscription' => date('Y-m-d H:i:s')
+                ]);
+                $conscritId = $pdo->lastInsertId();
+
+                // Insérer dans newsletter
+                $pdo->executeRequest($insertNewsletter, [
+                    ':nom' => $nom,
+                    ':prenom' => $prenom,
+                    ':email' => $email,
+                    ':date_inscription' => date('Y-m-d H:i:s')
+                ]);
+                $newsletterId = $pdo->lastInsertId();
+
+                // Créer la relation
+                $pdo->executeRequest($insertRelation, [
+                    ':conscrit_id' => $conscritId,
+                    ':newsletter_id' => $newsletterId
+                ]);
+
+                $successCount++;
+            } catch (Exception $e) {
+                $errorCount++;
+                $errors[] = "Ligne $rowNumber : erreur base de données - " . $e->getMessage();
+            }
         }
         fclose($handle);
 
-        $_SESSION['flash'] = '✅ Import CSV terminé.';
+        // Construire le message de retour
+        $msg = '✅ Import CSV terminé. ';
+        $msg .= "Importés: $successCount, Ignorés: $skipCount, Erreurs: $errorCount.";
+
+        if (!empty($errors) && count($errors) <= 10) {
+            $msg .= "\n\n🔔 Détails :\n" . implode("\n", $errors);
+        } elseif (!empty($errors)) {
+            $msg .= "\n\n🔔 (Premiers détails) :\n" . implode("\n", array_slice($errors, 0, 10)) . "\n... et " . (count($errors) - 10) . " erreurs supplémentaires.";
+        }
+
+        $_SESSION['flash'] = $msg;
         header('Location: index.php?action=inscrit');
+        exit();
+    }
+
+    public function export_inscrits()
+    {
+        $pdo = new BD();
+        $requete = "SELECT a.username, n.email, c.nom, c.prenom, c.gardien, c.membre, c.newsletter, c.date_inscription FROM admin AS a INNER JOIN conscrit_news AS cn ON a.courriel = cn.newsletter_id INNER JOIN newsletter AS n ON cn.newsletter_id = n.id INNER JOIN conscrit AS c ON cn.conscrit_id = c.id";
+        $stmt = $pdo->executeRequest($requete, []);
+        $inscrits = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename=inscrits.csv');
+        $output = fopen('php://output', 'w');
+        fputcsv($output, ['Nom', 'Prénom', 'Email', 'Gardien', 'Membre', 'Newsletter', 'Date d\'inscription']);
+        foreach ($inscrits as $inscrit) {
+            fputcsv($output, [$inscrit['nom'], $inscrit['prenom'], $inscrit['email'], $inscrit['gardien'], $inscrit['membre'], $inscrit['newsletter'], $inscrit['date_inscription']]);
+        }
+        fclose($output);
         exit();
     }
 
@@ -137,61 +318,89 @@ class AdminController
 
     public function write_newsletter($author, $date, $type, $title, $content, $file)
     {
-        // 1️⃣  Construire le corps du mail (HTML)
         $htmlBody = '<h2>' . htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '</h2>';
         $htmlBody .= '<p><strong>Auteur :</strong> ' . htmlspecialchars($author, ENT_QUOTES, 'UTF-8') . '</p>';
         $htmlBody .= '<p><strong>Date :</strong> ' . htmlspecialchars($date, ENT_QUOTES, 'UTF-8') . '</p>';
         $htmlBody .= '<p>' . nl2br(htmlspecialchars($content, ENT_QUOTES, 'UTF-8')) . '</p>';
 
-        // 2️⃣  Instancier le wrapper mail
-        $mail = new Mail();
+        $attachments = [];
+        if ($file && isset($file['name'])) {
+            $targetDir = __DIR__ . '/../documents/newsletter/';
+            if (!is_dir($targetDir)) {
+                mkdir($targetDir, 0777, true);
+            }
+
+            if (is_array($file['name'])) {
+                foreach ($file['name'] as $index => $name) {
+                    if ($file['error'][$index] !== UPLOAD_ERR_OK) {
+                        continue;
+                    }
+                    $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+                    $storedName = uniqid('newsletter_', true) . '.' . $ext;
+                    $path = $targetDir . $storedName;
+                    if (move_uploaded_file($file['tmp_name'][$index], $path)) {
+                        $attachments[] = ['path' => $path, 'name' => $name];
+                    }
+                }
+            } else {
+                if ($file['error'] === UPLOAD_ERR_OK) {
+                    $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+                    $storedName = uniqid('newsletter_', true) . '.' . $ext;
+                    $path = $targetDir . $storedName;
+                    if (move_uploaded_file($file['tmp_name'], $path)) {
+                        $attachments[] = ['path' => $path, 'name' => $file['name']];
+                    }
+                }
+            }
+        }
 
         $pdo = new BD();
         $requete = "SELECT * FROM newsletter";
         $stmt = $pdo->executeRequest($requete, []);
         $inscrits = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // 3️⃣  Configurer l’expéditeur / destinataire
-        // → on peut récupérer le destinataire depuis la base de données / configurati
+        if (empty($inscrits)) {
+            $_SESSION['flash'] = '⚠️ Aucun abonné trouvé pour l’envoi de la newsletter.';
+            header('Location: index.php?action=newsletter');
+            exit();
+        }
+
+        $successCount = 0;
+        $failureCount = 0;
+
+        $mailWrapper = new Mail();
+        $mail = $mailWrapper->getMail();
+        $mail->setFrom('lienhartm8@gmail.com', 'SCG Newsletter');
+        $mail->isHTML(true);
+        $mail->Subject = $title;
+        $mail->Body = $htmlBody;
+        $mail->AltBody = strip_tags($htmlBody);
 
         foreach ($inscrits as $inscrit) {
-            $mail->getMail()->setFrom('lienhartm8@gmail.com', 'SCG Newsletter');
-            $mail->getMail()->addAddress($inscrit['email'], $inscrit['nom']);
+            $mail->clearAddresses();
+            $mail->clearAttachments();
+            $mail->addAddress($inscrit['email']);
 
-
-            // 4️⃣  Définir le sujet et le corps
-            $mail->getMail()->Subject = $title;
-            $mail->getMail()->Body = $htmlBody;
-            $mail->getMail()->AltBody = strip_tags($htmlBody);
-
-            // 5️⃣  Gérer éventuellement un fichier joint (PDF/ZIP)
-            if ($file && $file['error'] === UPLOAD_ERR_OK) {
-                // stocker le fichier dans documents/newsletter/
-                $targetDir = __DIR__ . '/../documents/newsletter/';
-                if (!is_dir($targetDir)) {
-                    mkdir($targetDir, 0777, true);
-                }
-
-                $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-                $name = uniqid('newsletter_', true) . '.' . $ext;
-                $path = $targetDir . $name;
-
-                if (move_uploaded_file($file['tmp_name'], $path)) {
-                    $mail->getMail()->addAttachment($path, $file['name']);
-                }
+            foreach ($attachments as $attachment) {
+                $mail->addAttachment($attachment['path'], $attachment['name']);
             }
 
-            // 6️⃣  Envoyer le mail – on attrape les exceptions pour ne pas casser le flux
             try {
-                $mail->getMail()->send();
-                $msg = '✅ Newsletter envoyée !';
+                $mail->send();
+                $successCount++;
             } catch (Exception $e) {
-                error_log('Erreur envoi newsletter : ' . $e->getMessage());
-                $msg = '❌ Échec de l’envoi de la newsletter.';
+                error_log('Erreur envoi newsletter à ' . $inscrit['email'] . ' : ' . $e->getMessage());
+                $failureCount++;
             }
         }
-        // 7️⃣  Rediriger avec un petit flash‑message (via session ou query‑string)
-        $_SESSION['flash'] = $msg;               // ou <‑ ?msg=…
+
+        if ($failureCount === 0) {
+            $msg = '✅ Newsletter envoyée à ' . $successCount . ' destinataire(s).';
+        } else {
+            $msg = '❌ Envoi partiel : ' . $successCount . ' réussies, ' . $failureCount . ' échouées.';
+        }
+
+        $_SESSION['flash'] = $msg;
         header('Location: index.php?action=newsletter');
         exit();
     }
@@ -235,18 +444,145 @@ class AdminController
         if (file_exists($jsonFile)) {
             $json = file_get_contents($jsonFile);
             $data = json_decode($json, true) ?? [];
+            $id = end($data)['id'] + 1;
+        } else {
+            $id = 1;
         }
+
         $data[] = [
-            'titre' => htmlspecialchars($title, ENT_QUOTES, 'UTF-8'),
-            'auteur' => htmlspecialchars($author, ENT_QUOTES, 'UTF-8'),
+            'id' => $id,
             'date' => $date,
+            'auteur' => htmlspecialchars($author, ENT_QUOTES, 'UTF-8'),
             'type' => $type,
+            'titre' => htmlspecialchars($title, ENT_QUOTES, 'UTF-8'),
             'article' => $content,
             'images' => $uploadedFiles
         ];
         file_put_contents($jsonFile, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 
         header('Location: index.php?action=article');
+        exit();
+    }
+
+    public function garden()
+    {
+        $pdo = new BD();
+        $requete = "SELECT conscrit.* FROM conscrit WHERE gardien = TRUE;";
+        $stmt = $pdo->executeRequest($requete, []);
+        $gardiens = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $events = [];
+        $eventQuery = "SELECT g.id, g.title, g.start_date AS start, g.end_date AS end, g.color, g.extras, g.main_gardien_id FROM garde g ORDER BY g.start_date";
+        $eventStmt = $pdo->executeRequest($eventQuery, []);
+        $storedEvents = $eventStmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($storedEvents as $row) {
+            $event = [
+                'id' => (int) $row['id'],
+                'title' => $row['title'],
+                'start' => $row['start'],
+                'end' => $row['end'],
+                'color' => $row['color'],
+                'mainGardienId' => (int) $row['main_gardien_id'],
+                'extras' => $row['extras'] ? json_decode($row['extras'], true) : []
+            ];
+            $events[] = $event;
+        }
+
+        require_once 'view/admin/garden/index.php';
+    }
+
+    public function save_garden()
+    {
+        $payload = json_decode(file_get_contents('php://input'), true);
+        if (!$payload) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Données invalides']);
+            exit;
+        }
+
+        $mainGardienId = isset($payload['mainId']) ? (int) $payload['mainId'] : null;
+        $start = $payload['start'] ?? null;
+        $end = $payload['end'] ?? null;
+        $title = trim($payload['title'] ?? '');
+        $color = isset($payload['color']) ? substr($payload['color'], 0, 32) : null;
+        $textColor = $payload['textColor'] ?? null;
+        $extras = isset($payload['extras']) && is_array($payload['extras']) ? $payload['extras'] : [];
+
+        if (!$mainGardienId || !$start || !$end || !$title) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Tous les champs sont requis']);
+            exit;
+        }
+
+        if ($end <= $start) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'La date de fin doit être après la date de début']);
+            exit;
+        }
+
+        $pdo = new BD();
+        $insert = "INSERT INTO garde (main_gardien_id, extras, title, start_date, end_date, color) VALUES (:mainId, :extras, :title, :start, :end, :color)";
+        $params = [
+            ':mainId' => $mainGardienId,
+            ':extras' => json_encode($extras, JSON_UNESCAPED_UNICODE),
+            ':title' => $title,
+            ':start' => $start,
+            ':end' => $end,
+            ':color' => $color
+        ];
+        $stmt = $pdo->executeRequest($insert, $params);
+        $eventId = $pdo->lastInsertId();
+
+        echo json_encode(['success' => true, 'event' => ['id' => (int) $eventId, 'title' => $title, 'start' => $start, 'end' => $end, 'color' => $color, 'textColor' => $textColor, 'mainGardienId' => $mainGardienId, 'extras' => $extras]]);
+        exit;
+    }
+
+    public function delete_garden()
+    {
+        $payload = json_decode(file_get_contents('php://input'), true);
+        $eventId = isset($payload['id']) ? (int) $payload['id'] : null;
+
+        if (!$eventId) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'ID de garde manquant']);
+            exit;
+        }
+
+        $pdo = new BD();
+        $delete = "DELETE FROM garde WHERE id = :id";
+        $pdo->executeRequest($delete, [':id' => $eventId]);
+
+        echo json_encode(['success' => true, 'deletedId' => $eventId]);
+        exit;
+    }
+
+    public function planning()
+    {
+        $pdo = new BD();
+        $reservations = $pdo->executeRequest("SELECT * FROM reservation", []);
+        $reservations = $reservations->fetchAll(PDO::FETCH_ASSOC);
+
+        $pdo = new BD();
+        $requete = "SELECT conscrit.* FROM conscrit;";
+        $conscrits = $pdo->executeRequest($requete, []);
+        $conscrits = $conscrits->fetchAll(PDO::FETCH_ASSOC);
+        require_once 'view/admin/planning/index.php';
+    }
+
+    public function reserved_admin($id_conscrit, $arrivalDate, $departureDate, $numPeople, $numChildren)
+    {
+        $pdo = new BD();
+        $insert = "INSERT INTO reservation (id_conscrit, date_debut, date_fin, nb_adulte, nb_enfant, status) VALUES (:id_conscrit, :date_debut, :date_fin, :nb_adulte, :nb_enfant, 'reservé')";
+        $params = [
+            ':id_conscrit' => $id_conscrit,
+            ':date_debut' => $arrivalDate,
+            ':date_fin' => $departureDate,
+            ':nb_adulte' => $numPeople,
+            ':nb_enfant' => $numChildren
+        ];
+        $pdo->executeRequest($insert, $params);
+        header('Location: index.php?action=planning');
         exit();
     }
 
@@ -284,12 +620,14 @@ class AdminController
         if (file_exists($jsonFile)) {
             $json = file_get_contents($jsonFile);
             $data = json_decode($json, true) ?? [];
+            $id = end($data)['id'] + 1;
         } else {
             $data = [];
         }
 
         // Add new entry
         $data[] = [
+            'id' => $id,
             'date' => date("d/m/Y"),
             'titre' => htmlspecialchars($title, ENT_QUOTES, 'UTF-8'),
             'document' => $filename

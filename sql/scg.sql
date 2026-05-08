@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS newsletter (
 --
 --
 -- insertion newsletter par défaut
+
 INSERT INTO newsletter (email) VALUES
 ('lienhartm8@gmail.com'),
 ('jean.dupont@example.com'),
@@ -85,25 +86,82 @@ CREATE TABLE IF NOT EXISTS conscrit (
     gardien BOOLEAN NOT NULL DEFAULT FALSE,
     membre BOOLEAN NOT NULL DEFAULT FALSE,
     newsletter BOOLEAN NOT NULL DEFAULT TRUE,
-    date_inscription DATETIME NOT NULL
+    date_inscription DATETIME NOT NULL,
+    CHECK (gardien = 0 OR membre = 1)
 );
 
 --
 --
 -- insertion conscrits par défaut
 
-INSERT INTO conscrit (nom, prenom, gardien, newsletter, date_inscription) VALUES
-('Lienhart', 'Mathieu', TRUE, TRUE, '2023-01-10 09:00:00'),
-('Dupont', 'Jean', FALSE, TRUE, '2023-01-15 10:30:00'),
-('Lefebvre', 'Marie', TRUE, FALSE, '2023-02-20 14:45:00'),
-('Petit', 'Thomas', FALSE, TRUE, '2023-03-05 09:15:00'),
-('Roux', 'Julie', TRUE, TRUE, '2023-04-10 16:00:00'),
-('Durand', 'Nicolas', FALSE, FALSE, '2023-05-25 11:20:00'),
-('Morel', 'Sophie', TRUE, FALSE, '2023-06-30 13:50:00'),
-('Fournier', 'Lucas', FALSE, TRUE, '2023-07-18 08:40:00'),
-('Girard', 'Emma', TRUE, TRUE, '2023-08-22 17:30:00'),
-('Clara', 'André', FALSE, FALSE, '2023-09-12 12:10:00'),
-('Mercier', 'Paul', TRUE, FALSE, '2023-10-05 15:25:00');
+INSERT INTO conscrit (nom, prenom, gardien, membre, newsletter, date_inscription) VALUES
+('Lienhart', 'Mathieu', TRUE, TRUE, TRUE, '2023-01-10 09:00:00'),
+('Dupont', 'Jean', FALSE, TRUE, TRUE, '2023-01-15 10:30:00'),
+('Lefebvre', 'Marie', TRUE, TRUE, TRUE, '2023-02-20 14:45:00'),
+('Petit', 'Thomas', FALSE, TRUE, TRUE, '2023-03-05 09:15:00'),
+('Roux', 'Julie', TRUE, TRUE, TRUE, '2023-04-10 16:00:00'),
+('Durand', 'Nicolas', FALSE, FALSE, TRUE, '2023-05-25 11:20:00'),
+('Morel', 'Sophie', TRUE, TRUE, TRUE, '2023-06-30 13:50:00'),
+('Fournier', 'Lucas', FALSE, TRUE, TRUE, '2023-07-18 08:40:00'),
+('Girard', 'Emma', TRUE, TRUE, TRUE, '2023-08-22 17:30:00'),
+('Clara', 'André', FALSE, FALSE, TRUE, '2023-09-12 12:10:00'),
+('Mercier', 'Paul', TRUE, TRUE, TRUE, '2023-10-05 15:25:00');
+
+--
+--
+--
+
+--
+-- Table des gardes
+--
+CREATE TABLE IF NOT EXISTS garde (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    main_gardien_id INT NOT NULL,
+    extras JSON DEFAULT NULL,
+    title VARCHAR(255) NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    color VARCHAR(32) DEFAULT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (main_gardien_id) REFERENCES conscrit(id)
+);
+
+--
+--
+-- insertion gardes
+
+INSERT INTO garde (main_gardien_id, extras, title, start_date, end_date, color) VALUES
+(1, JSON_ARRAY(2, 3), 'Garde de Lienhart', '2026-07-01', '2026-07-05', 'hsla(0, 65%, 55%, 0.5)'),
+(2, JSON_ARRAY(1), 'Garde de Dupont', '2026-08-10', '2026-08-15', 'hsla(137.508, 65%, 55%, 0.5)'),
+(3, JSON_ARRAY(), 'Garde de Lefebvre', '2026-09-20', '2026-09-25', 'hsla(275.016, 65%, 55%, 0.5)');
+
+--
+--
+--
+
+--
+-- Table des réservation du chalet
+--
+
+CREATE TABLE IF NOT EXISTS reservation (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id_conscrit INT NOT NULL,
+    date_debut DATE NOT NULL,
+    date_fin DATE NOT NULL,
+    nb_adulte INT NOT NULL,
+    nb_enfant INT NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(50) NOT NULL DEFAULT 'en_attente'
+);
+
+--
+--
+-- insertion reservations client
+
+INSERT INTO reservation (id_conscrit, date_debut, date_fin, nb_adulte, nb_enfant, status) VALUES
+(1, '2026-07-01', '2026-07-05', 2, 0, 'en_attente'),
+(2, '2026-08-10', '2026-08-15', 2, 2, 'en_attente'),
+(3, '2026-09-20', '2026-09-25', 1, 1, 'en_attente');
 
 --
 --
@@ -124,6 +182,7 @@ CREATE TABLE IF NOT EXISTS conscrit_news (
 --
 --
 -- insertion conscrit_news par défaut
+
 INSERT INTO conscrit_news (conscrit_id, newsletter_id) VALUES
 (1, 1),
 (2, 2),
@@ -136,3 +195,7 @@ INSERT INTO conscrit_news (conscrit_id, newsletter_id) VALUES
 (9, 13),
 (10, 14),
 (11, 15);
+
+--
+--
+--

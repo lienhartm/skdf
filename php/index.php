@@ -45,6 +45,14 @@ $file = isset($_FILES['file']) ? $_FILES['file'] : null;
 $nom = isset($_POST['nom']) ? test_input($_POST['nom']) : null;
 $prenom = isset($_POST['prenom']) ? test_input($_POST['prenom']) : null;
 $email = isset($_POST['email']) ? test_input($_POST['email']) : null;
+$confirmationCode = isset($_POST['code']) ? test_input($_POST['code']) : null;
+
+// reservation admin
+$id_conscrit = isset($_POST['name']) ? test_input($_POST['name']) : null;
+$arrivalDate = isset($_POST['arrivalDate']) ? test_input($_POST['arrivalDate']) : null;
+$departureDate = isset($_POST['departureDate']) ? test_input($_POST['departureDate']) : null;
+$numPeople = isset($_POST['numPeople']) ? test_input($_POST['numPeople']) : null;
+$numChildren = isset($_POST['numChildren']) ? test_input($_POST['numChildren']) : null;
 
 // routing
 switch ($action) {
@@ -55,52 +63,85 @@ switch ($action) {
     case 'checkLogin':
         $adminController->checkLogin($email, $password);
         break;
+    case 'confirm':
+        $adminController->confirm();
+        break;
+    case 'checkCode':
+        $adminController->checkCode($confirmationCode);
+        break;
+    case 'code_mail':
+        $adminController->resendCode();
+        break;
     case 'admin':
-        $adminController->dashboard();
+        isset($_SESSION['admin']) ? $adminController->dashboard() : header('Location: ?action=not_access');
         break;
     case 'logout':
         $adminController->logout();
         break;
 
     // ADMIN FUNCTIONNALITY
+    case 'not_access':
+        $webSiteController->not_access();
+        break;
     case 'inscrit':
-        $adminController->inscrit();
+        isset($_SESSION['admin']) ? $adminController->inscrit() : header('Location: ?action=not_access');
         break;
     case 'write_inscrit':
-        $adminController->write_inscrit($nom, $prenom, $email);
+        isset($_SESSION['admin']) ? $adminController->write_inscrit($nom, $prenom, $email) : header('Location: ?action=not_access');
         break;
     case 'write_file_inscrit':
-        $adminController->write_file_inscrit($file);
+        isset($_SESSION['admin']) ? $adminController->write_file_inscrit($file) : header('Location: ?action=not_access');
+        break;
+    case 'export_inscrits':
+        isset($_SESSION['admin']) ? $adminController->export_inscrits() : header('Location: ?action=not_access');
         break;
     case 'newsletter':
-        $adminController->newsletter();
+        isset($_SESSION['admin']) ? $adminController->newsletter() : header('Location: ?action=not_access');
         break;
     case 'write_newsletter':
-        $adminController->write_newsletter($author, $date, $type, $title, $content, $file);
+        isset($_SESSION['admin']) ? $adminController->write_newsletter($author, $date, $type, $title, $content, $file) : header('Location: ?action=not_access');
         break;
     case 'article':
-        $adminController->article();
+        isset($_SESSION['admin']) ? $adminController->article() : header('Location: ?action=not_access');
         break;
     case 'write_article':
-        $adminController->write_article($author, $date, $type, $title, $content, $file);
+        isset($_SESSION['admin']) ? $adminController->write_article($author, $date, $type, $title, $content, $file) : header('Location: ?action=not_access');
+        break;
+    case 'garden':
+        isset($_SESSION['admin']) ? $adminController->garden() : header('Location: ?action=not_access');
+        break;
+    case 'save_garden':
+        isset($_SESSION['admin']) ? $adminController->save_garden() : header('Location: ?action=not_access');
+        break;
+    case 'delete_garden':
+        isset($_SESSION['admin']) ? $adminController->delete_garden() : header('Location: ?action=not_access');
+        break;
+    case 'write_garden':
+        isset($_SESSION['admin']) ? $adminController->write_garden($author, $date, $type, $title, $content, $file) : header('Location: ?action=not_access');
+        break;
+    case 'planning':
+        isset($_SESSION['admin']) ? $adminController->planning() : header('Location: ?action=not_access');
+        break;
+    case 'reserved_admin':
+        isset($_SESSION['admin']) ? $adminController->reserved_admin($id_conscrit, $arrivalDate, $departureDate, $numPeople, $numChildren) : header('Location: ?action=not_access');
         break;
     case 'document':
-        $adminController->document();
+        isset($_SESSION['admin']) ? $adminController->document() : header('Location: ?action=not_access');
         break;
     case 'write_document':
-        $adminController->write_document($type, $title, $file);
+        isset($_SESSION['admin']) ? $adminController->write_document($type, $title, $file) : header('Location: ?action=not_access');
         break;
     case 'markdown':
-        $adminController->markdown();
+        isset($_SESSION['admin']) ? $adminController->markdown() : header('Location: ?action=not_access');
         break;
     case 'mode_emploi':
-        $adminController->mode_emploi();
+        isset($_SESSION['admin']) ? $adminController->mode_emploi() : header('Location: ?action=not_access');
         break;
     case 'admin_parametre':
-        $adminController->parametre();
+        isset($_SESSION['admin']) ? $adminController->parametre() : header('Location: ?action=not_access');
         break;
     case 'new_admin':
-        $adminController->new_admin($email, $password);
+        isset($_SESSION['admin']) ? $adminController->new_admin($email, $password) : header('Location: ?action=not_access');
         break;
 
     // WEBSITE

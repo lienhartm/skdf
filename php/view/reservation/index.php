@@ -62,7 +62,12 @@ ob_start();
 </section>
 
 <script src="../script/reservation.js"></script>
+
+<script>
+    const reservations = <?php echo json_encode($reservations ?? []); ?>;
+</script>
     
+
 <?php
 $contenu = ob_get_clean();
 require_once './model/web.php';

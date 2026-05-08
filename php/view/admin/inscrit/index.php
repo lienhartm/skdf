@@ -32,6 +32,13 @@ ob_start();
                 <input type="submit" value="Importer">
             </form>
         </div>
+
+        <div style="display:flex;flex-direction:column;width:50%;">
+            <h2>Export de la liste d'inscrit</h2>
+            <form method="post" action="?action=export_inscrits">
+                <input type="submit" value="Exporter en CSV">
+            </form>
+        </div>
     </div>
 
     <h2>Les inscrits aux newsletters : <span><?= count($inscrits) ?></span></h2>
@@ -57,6 +64,8 @@ ob_start();
                         <td><?= htmlspecialchars($inscrit['nom']) ?></td>
                         <td><?= htmlspecialchars($inscrit['prenom']) ?></td>
                         <td><?= htmlspecialchars($inscrit['email']) ?></td>
+                        <td><?= $inscrit['gardien'] ? 'Oui' : 'Non' ?></td>
+                        <td><?= $inscrit['newsletter'] ? 'Oui' : 'Non' ?></td>
                         <td><?= htmlspecialchars($inscrit['date_inscription']) ?></td>
                     </tr>
                 <?php endforeach; ?>

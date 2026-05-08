@@ -167,3 +167,8 @@
     flex: 1;
     min-width: 200px;
 }
+
+.reservation-inputs > select {
+    padding: 5px;
+    width: 36%;
+}

@@ -57,6 +57,29 @@ class Mail
             echo "❌ Erreur lors de l'envoi : {$this->mail->ErrorInfo}";
         }
     }
+
+    public function codeMailing($email, $code)
+    {
+        try {
+            // Expéditeur et destinataire
+            $this->mail->setFrom('lienhartm8@gmail.com', 'SCG Authentication');
+            $this->mail->addAddress($email);
+
+            // Contenu
+            $this->mail->isHTML(true);
+            $this->mail->Subject = 'Votre code de confirmation SCG';
+            $this->mail->Body = '<p>Bonjour,</p>' .
+                '<p>Votre code de confirmation pour accéder à l\'espace administrateur est : <strong>' . htmlspecialchars($code, ENT_QUOTES, 'UTF-8') . '</strong></p>' .
+                '<p>Ce code est valable 10 minutes.</p>' .
+                '<p>Si vous n\'avez pas demandé cette connexion, ignorez ce message.</p>';
+            $this->mail->AltBody = 'Votre code de confirmation SCG : ' . $code;
+
+            $this->mail->send();
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
 
 // Test

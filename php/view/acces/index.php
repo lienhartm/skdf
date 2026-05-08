@@ -49,7 +49,7 @@ ob_start();
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-    new L.GPX("../geomapx/scg.gpx", {
+    new L.GPX("../../documents/geomapx/scg.gpx", {
         async: true,
         marker_options: {
             startIconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/pin-icon-start.png',

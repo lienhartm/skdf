@@ -1,0 +1,50 @@
+body {
+  font-family: Arial;
+  margin: 20px;
+}
+
+#calendar {
+  max-width: 900px;
+  margin-bottom: 30px;
+}
+
+form {
+  max-width: 900px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+}
+
+select, input {
+  width: 100%;
+  padding: 5px;
+}
+
+button {
+  margin-top: 10px;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.extra {
+  margin-top: 5px;
+}
+
+section.garden {
+  display: flex;
+  justify-content: center;
+}
+
+.extra > select {
+  width: 88%;
+}
+
+#formGarde > input {
+  width: 98%;
+}

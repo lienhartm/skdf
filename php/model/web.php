@@ -77,7 +77,7 @@
             <a href="?action=resultat">Résultats</a>
             <a href="?action=acces">Accès Refuge</a>
             <a href="?action=contact">Contact</a>
-            <?php if (isset($_SESSION['conscrit'])): ?>
+            <?php if (isset($_SESSION['conscrit']) || isset($_SESSION['admin'])): ?>
                 <div class="dropdown">
                     <a>Espace membre</a><br />
                     <div class="dropdown-content">
@@ -88,6 +88,10 @@
                 </div>
             <?php else: ?>
                 <a href="?action=login">Connection</a>
+            <?php endif; ?>
+            <?php if (isset($_SESSION['admin'])): ?>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="?action=admin">Admin</a>
             <?php endif; ?>
         </nav>
     </header>

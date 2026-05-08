@@ -4,6 +4,15 @@ ob_start();
 
 <link rel="stylesheet" href="../style/newsletter.css">
 
+<?php if (!empty($_SESSION['flash'])): ?>
+    <div class="flash-message" style="margin: 20px 50px; padding: 12px; background: #f4f4f4; border-left: 4px solid #0073e6;">
+        <?php echo htmlspecialchars($_SESSION['flash'], ENT_QUOTES, 'UTF-8'); ?>
+    </div>
+    <?php unset($_SESSION['flash']); ?>
+<?php endif; ?>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
 <div style="margin: 20px 50px;display: flex;flex-direction: row;align-items: space-between;">
     <form method="post" enctype="multipart/form-data" action="?action=write_newsletter" style="width: 50%;">
         <h2>Publier une newsletter</h2>
@@ -22,8 +31,8 @@ ob_start();
         <input type="text" id="title" name="title">
         <label for="content">Contenu</label>
         <textarea id="content" name="content"></textarea>
-        <label for="file-image">Image</label>
-        <input type="file" id="file-image" name="file[]" multiple>
+        <label for="file-document">Document</label>
+        <input type="file" id="file-document" name="file[]" accept=".pdf,.doc,.docx,.txt" multiple>
         <input type="submit" value="Ajouter">
     </form>
 
@@ -32,8 +41,8 @@ ob_start();
         <div id="apercu-article"
             style="margin: 20px 50px; padding: 20px; border: 1px solid #ccc; background-color: white; border-radius: 5px; min-height: 50px;">
         </div>
-        <div id="apercu-images"
-            style="display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 50px; padding: 20px; border: 1px solid #ccc; background-color: white; border-radius: 5px; min-height: 50px;">
+        <div id="apercu-documents"
+            style="margin: 20px 50px; padding: 20px; border: 1px solid #ccc; background-color: white; border-radius: 5px; min-height: 50px;">
         </div>
     </div>
 
@@ -47,13 +56,16 @@ ob_start();
         const contentInput = document.getElementById('content');
         const apercuDiv = document.getElementById('apercu-article');
 
-        contentInput.addEventListener('input', function () {
-            apercuDiv.innerHTML = marked.parse(contentInput.value);
-        });
+        function renderPreview() {
+            apercuDiv.innerHTML = marked.parse(contentInput.value || '');
+        }
 
-        // Image Upload Preview and Remove Logic
-        const fileInput = document.getElementById('file-image');
-        const listImages = document.getElementById('apercu-images');
+        contentInput.addEventListener('input', renderPreview);
+        renderPreview();
+
+        // Document Upload Preview and Remove Logic
+        const fileInput = document.getElementById('file-document');
+        const listDocuments = document.getElementById('apercu-documents');
 
         // Store selected files in an array since FileList is read-only
         let selectedFiles = [];
@@ -61,72 +73,54 @@ ob_start();
         fileInput.addEventListener('change', function (e) {
             const newFiles = Array.from(e.target.files);
             selectedFiles = selectedFiles.concat(newFiles);
-            updateImageList();
+            updateDocumentList();
         });
 
-        function updateImageList() {
-            listImages.innerHTML = ''; // Clear previous previews
+        function updateDocumentList() {
+            listDocuments.innerHTML = ''; // Clear previous previews
 
             // Create a new DataTransfer object to update the actual file input
             const dataTransfer = new DataTransfer();
 
             selectedFiles.forEach((file, index) => {
-                // Add file to data transfer
                 dataTransfer.items.add(file);
 
-                // Only process image files
-                if (!file.type.match('image.*')) return;
+                const item = document.createElement('div');
+                item.style.display = 'flex';
+                item.style.justifyContent = 'space-between';
+                item.style.alignItems = 'center';
+                item.style.padding = '10px';
+                item.style.border = '1px solid #ccc';
+                item.style.borderRadius = '5px';
+                item.style.marginBottom = '10px';
+                item.style.backgroundColor = '#fafafa';
 
-                const reader = new FileReader();
+                const label = document.createElement('span');
+                label.textContent = file.name;
+                label.style.flex = '1';
+                label.style.marginRight = '10px';
 
-                reader.onload = function (e) {
-                    const imgContainer = document.createElement('div');
-                    imgContainer.style.position = 'relative';
-                    imgContainer.style.width = '100px';
-                    imgContainer.style.height = '100px';
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.textContent = 'Supprimer';
+                removeBtn.style.background = 'red';
+                removeBtn.style.color = 'white';
+                removeBtn.style.border = 'none';
+                removeBtn.style.borderRadius = '4px';
+                removeBtn.style.cursor = 'pointer';
+                removeBtn.style.padding = '5px 10px';
 
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.title = file.name;
-                    img.style.width = '100%';
-                    img.style.height = '100%';
-                    img.style.objectFit = 'cover';
-                    img.style.borderRadius = '5px';
-                    img.style.border = '1px solid #ccc';
+                removeBtn.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    selectedFiles.splice(index, 1);
+                    updateDocumentList();
+                });
 
-                    const removeBtn = document.createElement('button');
-                    removeBtn.innerHTML = '&times;';
-                    removeBtn.style.position = 'absolute';
-                    removeBtn.style.top = '-5px';
-                    removeBtn.style.right = '-5px';
-                    removeBtn.style.background = 'red';
-                    removeBtn.style.color = 'white';
-                    removeBtn.style.border = 'none';
-                    removeBtn.style.borderRadius = '50%';
-                    removeBtn.style.cursor = 'pointer';
-                    removeBtn.style.width = '20px';
-                    removeBtn.style.height = '20px';
-                    removeBtn.style.lineHeight = '20px';
-                    removeBtn.style.padding = '0';
-                    removeBtn.style.fontSize = '14px';
-
-                    removeBtn.addEventListener('click', function (event) {
-                        event.preventDefault(); // Prevent form submission
-                        // Remove file from our array
-                        selectedFiles.splice(index, 1);
-                        // Re-render the list and update input
-                        updateImageList();
-                    });
-
-                    imgContainer.appendChild(img);
-                    imgContainer.appendChild(removeBtn);
-                    listImages.appendChild(imgContainer);
-                }
-
-                reader.readAsDataURL(file);
+                item.appendChild(label);
+                item.appendChild(removeBtn);
+                listDocuments.appendChild(item);
             });
 
-            // Update the actual file input with the modified list
             fileInput.files = dataTransfer.files;
         }
     });

@@ -2,6 +2,22 @@
 
 class WebSiteController
 {
+
+    public function not_access()
+    {
+        require_once 'view/not_access/index.php';
+    }
+
+    private function parseDateFr($date)
+    {
+        if (strpos($date, '/') !== false) {
+            [$d, $m, $y] = explode('/', $date);
+        } else {
+            [$d, $m, $y] = explode('-', $date);
+        }
+        return mktime(0, 0, 0, $m, $d, $y);
+    }
+
     public function index()
     {
         $actusJson = file_get_contents("documents/actualite/actus.json");
@@ -11,6 +27,10 @@ class WebSiteController
         $actus = json_decode($actusJson, true);
         $presses = json_decode($presseJson, true);
         $resultats = json_decode($resultatsJson, true);
+
+        usort($actus, function ($a, $b) {
+            return $this->parseDateFr($b['date']) <=> $this->parseDateFr($a['date']);
+        });
 
         (!$actus) ? $actus = [] : $actus = array_slice($actus, 0, 3);
         (!$presses) ? $presses = [] : $presses;
@@ -48,6 +68,10 @@ class WebSiteController
 
     public function reservation()
     {
+        $pdo = new BD();
+        $requete = "SELECT * FROM reservation";
+        $stmt = $pdo->executeRequest($requete, []);
+        $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
         require_once 'view/reservation/index.php';
     }
 
@@ -69,17 +93,11 @@ class WebSiteController
 
     public function actualite()
     {
-
         $actusJson = file_get_contents("documents/actualite/actus.json");
         $actus = json_decode($actusJson, true);
-        function parseDateFr($date)
-        {
-            [$d, $m, $y] = explode('-', $date);
-            return mktime(0, 0, 0, $m, $d, $y);
-        }
 
         usort($actus, function ($a, $b) {
-            return parseDateFr($b['date']) <=> parseDateFr($a['date']);
+            return $this->parseDateFr($b['date']) <=> $this->parseDateFr($a['date']);
         });
         require_once 'view/actualite/index.php';
     }
@@ -88,13 +106,9 @@ class WebSiteController
     {
         $presseJson = file_get_contents("documents/presse/presse.json");
         $presses = json_decode($presseJson, true);
-        function parseDateFr($date)
-        {
-            [$d, $m, $y] = explode('/', $date);
-            return mktime(0, 0, 0, $m, $d, $y);
-        }
+
         usort($presses, function ($a, $b) {
-            return parseDateFr($b['date']) <=> parseDateFr($a['date']);
+            return $this->parseDateFr($b['date']) <=> $this->parseDateFr($a['date']);
         });
         require_once 'view/presse/index.php';
     }
@@ -103,13 +117,9 @@ class WebSiteController
     {
         $resultatJson = file_get_contents("documents/resultat/resultat.json");
         $resultats = json_decode($resultatJson, true);
-        function parseDateFr($date)
-        {
-            [$d, $m, $y] = explode('/', $date);
-            return mktime(0, 0, 0, $m, $d, $y);
-        }
+
         usort($resultats, function ($a, $b) {
-            return parseDateFr($b['date']) <=> parseDateFr($a['date']);
+            return $this->parseDateFr($b['date']) <=> $this->parseDateFr($a['date']);
         });
         require_once 'view/resultat/index.php';
     }

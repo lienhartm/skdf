@@ -1,20 +1,24 @@
 [
     {
+        "id": 1,
         "date": "13\/03\/2018",
         "titre": "Résultats ski de fond hiver 2017-2018",
         "document": "ski-club-guebwiller-resultats-2017-2018.pdf"
     },
     {
+        "id": 2,
         "date": "13\/03\/2019",
         "titre": "Résultats ski de fond hiver 2018-2019",
         "document": "resultats-2018_2019.pdf"
     },
     {
+        "id": 3,
         "date": "13\/03\/2020",
         "titre": "Résultats ski de fond hiver 2019-2020",
         "document": "resutats-2020-ski-club-guebwiller.pdf"
     },
     {
+        "id": 4,
         "date": "21\/04\/2026",
         "titre": "Test",
         "document": "doc_69e741449d8fa1.99868449.pdf"

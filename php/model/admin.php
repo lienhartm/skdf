@@ -27,18 +27,17 @@
         </div>
 
         <nav class="nav">
+            <a href="?action=index">Accueil</a>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <a href="?action=inscrit">Inscrit</a>
             <a href="?action=newsletter">Newsletter</a>
             <a href="?action=article">Articles</a>
-            <a href="?action=gardien">Gardiens</a>
-            <a href="?action=reservation">Réservations</a>
+            <a href="?action=garden">Gardiens</a>
+            <a href="?action=planning">Réservations</a>
             <a href="?action=document">Documents</a>
             <a href="?action=markdown">Markdown</a>
             <a href="?action=mode_emploi">Mode d'emploi</a>
             <a href="?action=admin_parametre">Paramètres</a>
-            <?php if (isset($_SESSION['admin'])) { ?>
-                <a href="?action=logout">Déconnexion</a>
-            <?php } ?>
         </nav>
 
     </header>

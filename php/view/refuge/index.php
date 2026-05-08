@@ -63,8 +63,7 @@ ob_start();
 </div>
 
 <div class="reservation">
-    <a href="?action=login" target="_blank">Réservation
-    </a>
+    <a href="?action=<?php echo isset($_SESSION['conscrit']) ? 'reservation' : 'login'; ?>" target="_blank">Réservation</a>
 </div>
 
 <div class="refuge">

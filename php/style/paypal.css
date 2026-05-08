@@ -1,0 +1,9 @@
+section.paypal {
+    display: flex;
+    justify-content: center;
+}
+
+div.paypal {
+    flex-direction: column;
+}
+
