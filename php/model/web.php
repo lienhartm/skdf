@@ -39,27 +39,6 @@
 
 <body>
 
-    <!--
-    <header>
-        <div class="header">
-            <h1>Bienvenue au Ski Club Guebwiller !</h1>
-            <img src="../media/logo.png" alt="Logo du Ski Club Guebwiller">
-        </div>
-    </header>
-
-    <nav class="nav ">
-        <a href="?action=index">Accueil</a>
-        <a href="?action=refuge">Refuge</a>
-        <a href="?action=club">Ski de fond</a>
-            <a href="?action=histoire">Notre histoire</a>
-        <a href="?action=actualites">Actualités</a>
-        <a href="?action=presse">Revue de presse</a>
-        <a href="?action=resultats">Résultats</a>
-        <a href="?action=acces">Accès Refuge</a>
-        <a href="?action=contact">Contact</a>
-        <a href="?action=login">Connection</a>
-    </nav>
--->
     <header>
         <div class="title">
             <img src="../media/logo.png" alt="Logo du Ski Club Guebwiller">

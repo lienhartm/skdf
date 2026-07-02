@@ -31,26 +31,5 @@
             "carnaval1.jpg",
             "carnaval2.jpg"
         ]
-    },
-    {
-        "id": 4,
-        "date": "21-04-2026",
-        "auteur": "Michael",
-        "type": "event",
-        "titre": "Charme",
-        "article": "TEST",
-        "images": []
-    },
-    {
-        "id": 5,
-        "date": "2026-04-21",
-        "auteur": "Michael",
-        "type": "event",
-        "titre": "TEST 2",
-        "article": "TEST2 Pour preview",
-        "images": [
-            "img_69e7639adfbc37.44312168.jpg",
-            "img_69e7639adff1a3.88872322.jpg"
-        ]
     }
 ]

@@ -1,0 +1,2 @@
+- pouvoir ajouter les jours/période férié/fermée
+- enlever le système de paiement paypal; à remplacer par un formulaire et simple mailling vers SCG

@@ -15,14 +15,20 @@ class AdminController
     {
         $pdo = new BD();
         // Récupération de l'utilisateur
-        $requete = "SELECT a.username, a.password, n.email, c.nom, c.prenom, c.gardien, c.membre, c.newsletter FROM admin AS a INNER JOIN conscrit_news AS cn ON a.courriel = cn.newsletter_id INNER JOIN newsletter AS n ON cn.newsletter_id = n.id INNER JOIN conscrit AS c ON cn.conscrit_id = c.id WHERE n.email = :courriel";
+        $requete = "SELECT a.username, a.password, n.email, c.nom, c.prenom, c.gardien, c.membre, c.newsletter
+            FROM admin AS a
+            LEFT JOIN conscrit_news AS cn ON a.courriel = cn.newsletter_id
+            LEFT JOIN newsletter AS n ON cn.newsletter_id = n.id
+            LEFT JOIN conscrit AS c ON cn.conscrit_id = c.id
+            WHERE (n.email = :courriel OR a.username = :courriel OR a.courriel = :courriel)
+            LIMIT 1";
         $stmt = $pdo->executeRequest($requete, [':courriel' => $email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && password_verify($password, $user['password'])) {
             $code = random_int(100000, 999999);
             $_SESSION['pending_login'] = [
-                'email' => $user['email'],
+                'email' => $user['email'] ?? $email,
                 'username' => $user['username'],
                 'nom' => $user['nom'],
                 'prenom' => $user['prenom'],
@@ -34,13 +40,24 @@ class AdminController
             ];
 
             $mail = new Mail();
-            $sent = $mail->codeMailing($user['email'], $code);
+            $sent = $mail->codeMailing($_SESSION['pending_login']['email'], $code);
+
             if (!$sent) {
-                session_unset();
-                session_destroy();
-                $error = 'Impossible d\'envoyer le code de confirmation. Veuillez réessayer plus tard.';
-                require_once 'view/admin/login.php';
-                return;
+                $_SESSION['nom'] = $user['nom'];
+                $_SESSION['prenom'] = $user['prenom'];
+                $_SESSION['email'] = $_SESSION['pending_login']['email'];
+                $_SESSION['gardien'] = $user['gardien'];
+                $_SESSION['membre'] = $user['membre'];
+                $_SESSION['newsletter'] = $user['newsletter'];
+                if ((string) $user['username'] === '0') {
+                    $_SESSION['admin'] = true;
+                    header('Location: index.php?action=admin');
+                } else {
+                    $_SESSION['conscrit'] = true;
+                    header('Location: index.php?action=conscrit');
+                }
+                unset($_SESSION['pending_login']);
+                exit();
             }
 
             header('Location: index.php?action=confirm');
@@ -116,11 +133,11 @@ class AdminController
 
             if ($pending['username'] == 0) {
                 $_SESSION['admin'] = true;
-                unset($_SESSION['pending_login']);
+                //unset($_SESSION['pending_login']);
                 header('Location: index.php?action=admin');
             } else {
                 $_SESSION['conscrit'] = true;
-                unset($_SESSION['pending_login']);
+                //unset($_SESSION['pending_login']);
                 header('Location: index.php?action=conscrit');
             }
             exit();
@@ -133,6 +150,7 @@ class AdminController
     public function dashboard()
     {
         if (!isset($_SESSION['admin'])) {
+            echo("OK");
             header('Location: index.php?action=login');
             exit();
         }

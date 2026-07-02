@@ -46,11 +46,29 @@ ob_start();
                 <label for="departureDate">Date de départ (matin):</label>
                 <input type="date" id="departureDate" name="departureDate">
 
+                <br />
+
+                <label for="motivation">Motivations:</label>
+                <input type="text" id="motivation" name="motivation">
+
             </div>
             <div>
+
+                    <p class="bold">Nom : <span id="nom">...</span></p>
+                    <p class="bold">Prénom : <span id="prenom">...</span></p>
+                    <p class="bold">Voie: <span id="voie">0</span></p>
+                    <p class="bold">Rue: <span id="rue">...</span></p>
+                    <p class="bold">Code Postal: <span id="codePostal">00000</span></p>
+                    <p class="bold">Ville: <span id="ville">...</span></p>
+                    <p class="bold">Tél: <span id="telephone">+33-000-000-000</span></p>
+                    <p class="bold">Courriel: <span id="courriel">...@....com</span></p>
+                    <p class="bold">Date de début: <span id="dateDebut">00-00-0000</span></p>
+                    <p class="bold">Date de fin: <span id="dateFin">00-00-0000</span></p>
                     <p class="bold">Nombre de nuitées: <span id="numDays">0</span></p>
                     <p class="bold">Nombre d'adultes: <span id="numAdult">0</span></p>
                     <p class="bold">Nombre d'enfants: <span id="numChild">0</span></p>
+
+                    <p class="bold">Motivation: <span id="textMotivation">...</span></p>
 
                 <button id="reserveButton">Réserver</button>
             </div>
